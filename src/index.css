@@ -7,24 +7,24 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 220 20% 20%;
+    --foreground: 210 25% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 20%;
+    --card-foreground: 210 25% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 20%;
+    --popover-foreground: 210 25% 20%;
 
-    --primary: 0 80% 55%;
+    --primary: 204 71% 38%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 220 20% 20%;
+    --secondary: 204 30% 95%;
+    --secondary-foreground: 204 71% 38%;
 
     --muted: 210 20% 96%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 20 90% 55%;
+    --accent: 0 79% 52%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -32,13 +32,13 @@
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 0 80% 55%;
+    --ring: 204 71% 38%;
 
     --radius: 0.75rem;
 
-    --hero-gradient: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(350 80% 97%) 50%, hsl(210 60% 97%) 100%);
-    --section-warm: 30 50% 97%;
-    --section-red: 0 70% 40%;
+    --hero-gradient: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(204 60% 97%) 50%, hsl(0 60% 98%) 100%);
+    --section-warm: 204 30% 97%;
+    --section-red: 204 71% 38%;
 
     font-family: 'Inter', sans-serif;
   }
