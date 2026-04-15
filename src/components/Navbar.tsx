@@ -13,8 +13,7 @@ const Navbar = () => {
             <span className="text-primary-foreground font-bold text-lg">▶</span>
           </div>
           <div className="leading-tight">
-            <span className="text-[10px] text-muted-foreground">mekari</span>
-            <p className="text-lg font-bold text-foreground -mt-1">talenta</p>
+            <p className="text-lg font-bold text-foreground -mt-1">Synckerja Office</p>
           </div>
         </div>
 

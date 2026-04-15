@@ -33,7 +33,7 @@ const WhyChooseSection = () => {
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-4 mb-10">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-foreground">
-            Mekari Talenta paling mengerti kebutuhan Anda
+            Synckerja Office paling mengerti kebutuhan Anda
           </h2>
           <p className="text-muted-foreground self-end">
             Dirancang menjadi solusi HCM yang memberikan keamanan, kemudahan, dan dukungan penuh bagi bisnis berbagai skala.

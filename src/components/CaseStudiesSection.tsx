@@ -9,7 +9,7 @@ const caseStudies: Record<string, { stats: { value: string; label: string }[]; q
       { value: "100%", label: "lebih cepat & akurat mengelola absensi" },
       { value: "3x", label: "lebih efisien mengelola onboarding" },
     ],
-    quote: "Sebelum pakai Mekari Talenta, kami manual, di mana perhitungan manual membutuhkan paling cepat 3 hari. Sekarang, 30 menit bisa selesai.",
+    quote: "Sebelum pakai Synckerja Office, kami manual, di mana perhitungan manual membutuhkan paling cepat 3 hari. Sekarang, 30 menit bisa selesai.",
     person: "Erna",
     company: "Compensation & Benefit, PT Victoria Care Indonesia Tbk.",
   },
@@ -33,7 +33,7 @@ const CaseStudiesSection = () => {
     <section className="py-16 lg:py-24 section-red text-primary-foreground">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-3">
-          Bagaimana Mekari Talenta membantu bisnis di berbagai industri
+          Bagaimana Synckerja Office membantu bisnis di berbagai industri
         </h2>
         <p className="text-primary-foreground/80 mb-8 max-w-xl">
           Lihat hasil nyata dari perusahaan yang berhasil mempercepat proses HR dan meningkatkan akurasi data.

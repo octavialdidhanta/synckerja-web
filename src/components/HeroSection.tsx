@@ -49,7 +49,7 @@ const HeroSection = () => {
 
           {/* Right */}
           <div className="flex justify-center relative">
-            <img src={heroPerson} alt="Professional menggunakan Mekari Talenta" width={500} height={500} className="relative z-10" />
+            <img src={heroPerson} alt="Professional menggunakan Synckerja Office" width={500} height={500} className="relative z-10" />
           </div>
         </div>
       </div>

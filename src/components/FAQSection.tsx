@@ -3,23 +3,23 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    q: "Apa itu Mekari Talenta?",
-    a: "Mekari Talenta adalah software HRIS berbasis cloud yang membantu perusahaan mengelola proses manajemen sumber daya manusia dalam satu sistem terintegrasi, mulai dari administrasi karyawan, absensi, hingga penggajian dan pengembangan karyawan.",
+    q: "Apa itu Synckerja Office?",
+    a: "Synckerja Office adalah software HRIS berbasis cloud yang membantu perusahaan mengelola proses manajemen sumber daya manusia dalam satu sistem terintegrasi, mulai dari administrasi karyawan, absensi, hingga penggajian dan pengembangan karyawan.",
   },
   {
-    q: "Perusahaan seperti apa yang cocok menggunakan Mekari Talenta?",
-    a: "Mekari Talenta cocok untuk perusahaan dari berbagai skala dan industri, mulai dari startup hingga enterprise, yang ingin mengotomasi dan menyederhanakan proses HR mereka.",
+    q: "Perusahaan seperti apa yang cocok menggunakan Synckerja Office?",
+    a: "Synckerja Office cocok untuk perusahaan dari berbagai skala dan industri, mulai dari startup hingga enterprise, yang ingin mengotomasi dan menyederhanakan proses HR mereka.",
   },
   {
-    q: "Apakah Mekari Talenta dapat terintegrasi dengan sistem lain?",
-    a: "Ya, Mekari Talenta terintegrasi dengan berbagai solusi dalam ekosistem Mekari dan juga mendukung integrasi dengan sistem pihak ketiga melalui API.",
+    q: "Apakah Synckerja Office dapat terintegrasi dengan sistem lain?",
+    a: "Ya, Synckerja Office terintegrasi dengan berbagai solusi dan juga mendukung integrasi dengan sistem pihak ketiga melalui API.",
   },
   {
-    q: "Bagaimana Mekari Talenta mengelola keamanan data perusahaan?",
-    a: "Mekari Talenta menggunakan standar keamanan internasional termasuk sertifikasi ISO 27001 dan menyimpan data di pusat data lokal Indonesia.",
+    q: "Bagaimana Synckerja Office mengelola keamanan data perusahaan?",
+    a: "Synckerja Office menggunakan standar keamanan internasional termasuk sertifikasi ISO 27001 dan menyimpan data di pusat data lokal Indonesia.",
   },
   {
-    q: "Bagaimana cara memulai penggunaan Mekari Talenta?",
+    q: "Bagaimana cara memulai penggunaan Synckerja Office?",
     a: "Anda bisa memulai dengan mendaftar untuk uji coba gratis atau menghubungi tim sales kami untuk konsultasi kebutuhan HR perusahaan Anda.",
   },
 ];
@@ -31,7 +31,7 @@ const FAQSection = () => {
     <section className="py-16 lg:py-24 bg-muted">
       <div className="container mx-auto px-4 max-w-3xl">
         <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-10">
-          Saya punya pertanyaan mengenai Mekari Talenta
+          Saya punya pertanyaan mengenai Synckerja Office
         </h2>
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           {faqs.map((faq, i) => (

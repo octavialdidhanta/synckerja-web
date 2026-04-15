@@ -9,12 +9,11 @@ const FooterSection = () => {
                 <span className="text-primary-foreground font-bold text-sm">▶</span>
               </div>
               <div className="leading-tight">
-                <span className="text-[9px] text-background/60">mekari</span>
-                <p className="text-base font-bold -mt-0.5">talenta</p>
+                <p className="text-base font-bold -mt-0.5">Synckerja Office</p>
               </div>
             </div>
             <p className="text-sm text-background/60">
-              Software HR #1 di Indonesia untuk mengelola SDM secara efisien.
+              Software HR terintegrasi untuk mengelola SDM secara efisien.
             </p>
           </div>
           {[
@@ -35,7 +34,7 @@ const FooterSection = () => {
           ))}
         </div>
         <div className="border-t border-background/10 pt-6 text-center text-xs text-background/40">
-          © 2025 Mekari Talenta. All rights reserved.
+          © 2025 Synckerja Office. All rights reserved.
         </div>
       </div>
     </footer>
