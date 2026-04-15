@@ -5,8 +5,8 @@ const FooterSection = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-10">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-7 h-7 bg-primary rounded flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">▶</span>
+              <div className="w-7 h-7 bg-accent rounded flex items-center justify-center">
+                <span className="text-accent-foreground font-bold text-sm">▶</span>
               </div>
               <div className="leading-tight">
                 <p className="text-base font-bold -mt-0.5">Synckerja Office</p>
