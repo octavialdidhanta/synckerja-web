@@ -8,7 +8,7 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left */}
           <div>
-            <span className="inline-block text-primary text-sm font-semibold mb-4">#1 Software HR di Indonesia</span>
+            <span className="inline-block text-accent text-sm font-semibold mb-4">#1 Software HR di Indonesia</span>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight mb-6">
               Solusi HCM terintegrasi untuk efisiensi pengelolaan SDM
             </h1>
@@ -25,7 +25,7 @@ const HeroSection = () => {
               ))}
             </ul>
             <div className="flex flex-wrap gap-3 mb-8">
-              <a href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity">
+              <a href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity">
                 💬 WhatsApp sales
               </a>
               <a href="#" className="px-6 py-3 border border-border text-foreground font-semibold rounded-lg hover:bg-muted transition-colors">

@@ -61,7 +61,7 @@ const CaseStudiesSection = () => {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {data.stats.map((s) => (
               <div key={s.value}>
-                <p className="text-3xl lg:text-4xl font-extrabold text-primary">{s.value}</p>
+                <p className="text-3xl lg:text-4xl font-extrabold text-accent">{s.value}</p>
                 <p className="text-sm text-muted-foreground mt-1">{s.label}</p>
               </div>
             ))}

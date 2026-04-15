@@ -31,7 +31,7 @@ const Navbar = () => {
             <Globe className="w-4 h-4" /> ID ▾
           </button>
           <a href="#" className="text-sm font-medium text-foreground">Sign In</a>
-          <a href="#" className="px-5 py-2 bg-primary text-primary-foreground text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity">
+          <a href="#" className="px-5 py-2 bg-accent text-accent-foreground text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity">
             Hubungi sales
           </a>
           <a href="#" className="px-5 py-2 border border-foreground text-foreground text-sm font-semibold rounded-lg hover:bg-muted transition-colors">
@@ -52,7 +52,7 @@ const Navbar = () => {
           <a href="#harga" className="block text-sm font-medium">Harga</a>
           <a href="#resources" className="block text-sm font-medium">Resources</a>
           <div className="flex gap-3 pt-2">
-            <a href="#" className="flex-1 text-center px-4 py-2 bg-primary text-primary-foreground text-sm font-semibold rounded-lg">Hubungi sales</a>
+            <a href="#" className="flex-1 text-center px-4 py-2 bg-accent text-accent-foreground text-sm font-semibold rounded-lg">Hubungi sales</a>
             <a href="#" className="flex-1 text-center px-4 py-2 border border-foreground text-sm font-semibold rounded-lg">Coba gratis</a>
           </div>
         </div>
