@@ -35,7 +35,7 @@ const FooterSection = () => {
           ))}
         </div>
         <div className="border-t border-background/10 pt-6 text-center text-xs text-background/40">
-          © 2025 Mekari Talenta. All rights reserved.
+          © 2025 Synckerja Office. All rights reserved.
         </div>
       </div>
     </footer>
