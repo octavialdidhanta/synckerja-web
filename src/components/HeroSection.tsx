@@ -1,5 +1,5 @@
 import { CheckCircle } from "lucide-react";
-import heroPerson from "@/assets/hero-person.png";
+import heroPerson from "@/assets/hero-person.webp";
 
 const HeroSection = () => {
   return (
