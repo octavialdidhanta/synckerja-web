@@ -45,7 +45,7 @@ const FeaturesSection = () => {
             Solusi HCM terintegrasi dengan fitur end-to-end dari rekrutmen, payroll, hingga performance management yang sesuai dengan kebutuhan industri Anda.
           </p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
           {features.map((f) => (
             <div
               key={f.title}
