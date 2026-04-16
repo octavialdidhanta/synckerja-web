@@ -80,7 +80,7 @@ const CaseStudiesSection = () => {
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-3">
           Bagaimana Synckerja Office membantu bisnis di berbagai industri
         </h2>
-        <p className="text-primary-foreground/80 mb-8 max-w-xl">
+        <p className="text-primary-foreground/90 mb-8 max-w-xl">
           Testimoni Klien kami yang menerima manfaat dari Synckerja Office.
         </p>
 
@@ -93,7 +93,7 @@ const CaseStudiesSection = () => {
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 active === ind
                   ? "bg-primary-foreground text-foreground"
-                  : "border border-primary-foreground/30 text-primary-foreground/80 hover:bg-primary-foreground/10"
+                  : "border border-primary-foreground/40 text-primary-foreground/90 hover:bg-primary-foreground/10"
               }`}
             >
               {ind}

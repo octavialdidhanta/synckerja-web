@@ -37,7 +37,7 @@ const FeaturesSection = () => {
   return (
     <section className="py-16 lg:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-left md:text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-foreground mb-4">
             Visibilitas dan kontrol SDM untuk Business Owner
           </h2>
@@ -49,7 +49,7 @@ const FeaturesSection = () => {
           {features.map((f) => (
             <div
               key={f.title}
-              className="rounded-xl border border-primary/20 bg-card p-6 hover:shadow-lg transition-shadow w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[420px] sm:min-w-[420px] md:w-auto md:min-w-0 flex-shrink-0 md:flex-shrink"
+              className="rounded-xl border border-primary/20 bg-card p-6 hover:shadow-lg transition-shadow w-[82vw] min-w-[82vw] sm:w-[420px] sm:min-w-[420px] md:w-auto md:min-w-0 flex-shrink-0 md:flex-shrink"
             >
               <div className="w-full h-32 bg-muted rounded-lg mb-5 flex items-center justify-center">
                 <span className="text-3xl text-muted-foreground">📊</span>

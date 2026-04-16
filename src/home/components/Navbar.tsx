@@ -7,13 +7,15 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-      <div className="container mx-auto flex min-h-16 items-center justify-between gap-3 px-4 py-2.5">
+      <div className="container mx-auto flex min-h-16 items-center justify-between gap-2 px-2 py-2.5 md:gap-3 md:px-4">
         {/* Logo */}
-        <div className="flex min-w-0 flex-1 items-center gap-3 lg:flex-initial">
-          <img src={logoUrl} alt="" width={48} height={48} className="size-12 shrink-0 rounded-md object-contain" />
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 lg:flex-initial">
+          <img src={logoUrl} alt="" width={36} height={36} className="size-9 shrink-0 rounded-md object-contain md:size-12" />
           <div className="min-w-0">
-            <p className="text-lg font-bold leading-none text-foreground">Synckerja Office</p>
-            <p className="mt-px text-[11px] font-medium leading-tight text-muted-foreground sm:text-xs lg:text-[0.8125rem]">
+            <p className="text-[15px] md:text-lg font-bold leading-none text-foreground">
+              Synckerja Office
+            </p>
+            <p className="mt-0 text-[9.5px] md:text-[11px] font-medium leading-tight text-muted-foreground sm:text-xs lg:text-[0.8125rem]">
               Measuring Performance, Connecting Progress
             </p>
           </div>
@@ -45,13 +47,20 @@ const Navbar = () => {
         </div>
 
         {/* Mobile toggle */}
-        <button className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+        <button
+          type="button"
+          className="lg:hidden"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? "Tutup menu" : "Buka menu"}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
+        >
           {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border bg-background px-4 py-4 space-y-3">
+        <div id="mobile-nav" className="lg:hidden border-t border-border bg-background px-4 py-4 space-y-3">
           <a href="#fitur" className="block text-sm font-medium">Fitur</a>
           <a href="#solusi" className="block text-sm font-medium">Solusi</a>
           <a href="#harga" className="block text-sm font-medium">Harga</a>

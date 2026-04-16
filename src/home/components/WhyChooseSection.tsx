@@ -35,7 +35,7 @@ const WhyChooseSection = () => {
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-foreground">
             Kontrol operasional tim untuk business owner yang ingin tumbuh cepat
           </h2>
-          <p className="text-muted-foreground self-end">
+          <p className="text-foreground/70 self-end">
             Satukan data orang, jam kerja, dan payroll agar biaya terkendali, tim lebih disiplin, dan keputusan bisa diambil cepat tanpa tenggelam di urusan admin.
           </p>
         </div>

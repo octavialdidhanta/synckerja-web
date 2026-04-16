@@ -23,12 +23,12 @@ const FooterSection = () => {
             </p>
           </div>
           {[
-            { title: "Produk", links: ["Kehadiran", "Payroll", "Rekrutmen", "Performance"] },
+            { title: "Fitur", links: ["Kehadiran", "Payroll", "Rekrutmen", "Performance"] },
             { title: "Perusahaan", links: ["Tentang Kami", "Karir", "Blog", "Hubungi Kami"] },
             { title: "Dukungan", links: ["Pusat Bantuan", "Kebijakan Privasi", "Syarat & Ketentuan"] },
           ].map((col) => (
             <div key={col.title}>
-              <h4 className="font-semibold mb-3">{col.title}</h4>
+              <h3 className="font-semibold mb-3 text-sm">{col.title}</h3>
               <ul className="space-y-2">
                 {col.links.map((l) => (
                   <li key={l}>
