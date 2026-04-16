@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import Navbar from "@/home/components/Navbar";
 import HeroSection from "@/home/components/HeroSection";
+import DeferredRender from "@/home/components/DeferredRender";
 
 const FeaturesSection = lazy(() => import("@/home/components/FeaturesSection"));
 const WhyChooseSection = lazy(() => import("@/home/components/WhyChooseSection"));
@@ -15,11 +16,21 @@ const Index = () => {
       <main>
         <HeroSection />
         <Suspense fallback={null}>
-          <FeaturesSection />
-          <WhyChooseSection />
-          <CaseStudiesSection />
-          <FAQSection />
-          <FooterSection />
+          <DeferredRender>
+            <FeaturesSection />
+          </DeferredRender>
+          <DeferredRender>
+            <WhyChooseSection />
+          </DeferredRender>
+          <DeferredRender>
+            <CaseStudiesSection />
+          </DeferredRender>
+          <DeferredRender>
+            <FAQSection />
+          </DeferredRender>
+          <DeferredRender>
+            <FooterSection />
+          </DeferredRender>
         </Suspense>
       </main>
     </div>

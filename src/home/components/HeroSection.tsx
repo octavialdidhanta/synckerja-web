@@ -1,5 +1,6 @@
 import { CheckCircle } from "lucide-react";
 import heroPerson from "@/home/assets/hero-person.webp";
+import { gtmPush } from "@/share/analytics/gtm";
 
 const HeroSection = () => {
   return (
@@ -31,11 +32,16 @@ const HeroSection = () => {
               ))}
             </ul>
             <div className="flex flex-wrap gap-3 mb-8">
-              <a href="#" className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity">
+              <a
+                href="#"
+                onClick={() => gtmPush({ event: "cta_click", cta: "whatsapp_sales", placement: "hero" })}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity"
+              >
                 💬 WhatsApp sales
               </a>
               <a
                 href="https://office.synckerja.com/register"
+                onClick={() => gtmPush({ event: "cta_click", cta: "coba_gratis", placement: "hero" })}
                 className="px-6 py-3 border border-border text-foreground font-semibold rounded-lg hover:bg-muted transition-colors"
               >
                 Coba gratis

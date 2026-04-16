@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X, Globe } from "lucide-react";
 import logoUrl from "@/home/assets/pwa-192.png";
+import { gtmPush } from "@/share/analytics/gtm";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -23,23 +24,61 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden lg:flex items-center gap-8">
-          <a href="#fitur" className="text-sm font-semibold text-foreground hover:text-primary transition-colors">Fitur ▾</a>
-          <a href="#solusi" className="text-sm font-semibold text-foreground hover:text-primary transition-colors">Solusi ▾</a>
-          <a href="#harga" className="text-sm font-semibold text-foreground hover:text-primary transition-colors">Harga</a>
-          <a href="#resources" className="text-sm font-semibold text-foreground hover:text-primary transition-colors">Resources ▾</a>
+          <a
+            href="#fitur"
+            onClick={() => gtmPush({ event: "nav_click", item: "fitur", placement: "navbar_desktop" })}
+            className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+          >
+            Fitur ▾
+          </a>
+          <a
+            href="#solusi"
+            onClick={() => gtmPush({ event: "nav_click", item: "solusi", placement: "navbar_desktop" })}
+            className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+          >
+            Solusi ▾
+          </a>
+          <a
+            href="#harga"
+            onClick={() => gtmPush({ event: "nav_click", item: "harga", placement: "navbar_desktop" })}
+            className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+          >
+            Harga
+          </a>
+          <a
+            href="#resources"
+            onClick={() => gtmPush({ event: "nav_click", item: "resources", placement: "navbar_desktop" })}
+            className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+          >
+            Resources ▾
+          </a>
         </div>
 
         {/* Right side */}
         <div className="hidden lg:flex items-center gap-4">
-          <button className="flex items-center gap-1 text-sm text-muted-foreground">
+          <button
+            className="flex items-center gap-1 text-sm text-muted-foreground"
+            onClick={() => gtmPush({ event: "cta_click", cta: "language_switch", placement: "navbar_desktop" })}
+          >
             <Globe className="w-4 h-4" /> ID ▾
           </button>
-          <a href="#" className="text-sm font-semibold text-foreground">Sign In</a>
-          <a href="#" className="px-5 py-2 bg-accent text-accent-foreground text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity">
+          <a
+            href="#"
+            onClick={() => gtmPush({ event: "cta_click", cta: "sign_in", placement: "navbar_desktop" })}
+            className="text-sm font-semibold text-foreground"
+          >
+            Sign In
+          </a>
+          <a
+            href="#"
+            onClick={() => gtmPush({ event: "cta_click", cta: "hubungi_sales", placement: "navbar_desktop" })}
+            className="px-5 py-2 bg-accent text-accent-foreground text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+          >
             Hubungi sales
           </a>
           <a
             href="https://office.synckerja.com/register"
+            onClick={() => gtmPush({ event: "cta_click", cta: "coba_gratis", placement: "navbar_desktop" })}
             className="px-5 py-2 border border-foreground text-foreground text-sm font-semibold rounded-lg hover:bg-muted transition-colors"
           >
             Coba gratis
@@ -61,14 +100,45 @@ const Navbar = () => {
 
       {mobileOpen && (
         <div id="mobile-nav" className="lg:hidden border-t border-border bg-background px-4 py-4 space-y-3">
-          <a href="#fitur" className="block text-sm font-semibold">Fitur</a>
-          <a href="#solusi" className="block text-sm font-semibold">Solusi</a>
-          <a href="#harga" className="block text-sm font-semibold">Harga</a>
-          <a href="#resources" className="block text-sm font-semibold">Resources</a>
+          <a
+            href="#fitur"
+            onClick={() => gtmPush({ event: "nav_click", item: "fitur", placement: "navbar_mobile" })}
+            className="block text-sm font-semibold"
+          >
+            Fitur
+          </a>
+          <a
+            href="#solusi"
+            onClick={() => gtmPush({ event: "nav_click", item: "solusi", placement: "navbar_mobile" })}
+            className="block text-sm font-semibold"
+          >
+            Solusi
+          </a>
+          <a
+            href="#harga"
+            onClick={() => gtmPush({ event: "nav_click", item: "harga", placement: "navbar_mobile" })}
+            className="block text-sm font-semibold"
+          >
+            Harga
+          </a>
+          <a
+            href="#resources"
+            onClick={() => gtmPush({ event: "nav_click", item: "resources", placement: "navbar_mobile" })}
+            className="block text-sm font-semibold"
+          >
+            Resources
+          </a>
           <div className="flex gap-3 pt-2">
-            <a href="#" className="flex-1 text-center px-4 py-2 bg-accent text-accent-foreground text-sm font-semibold rounded-lg">Hubungi sales</a>
+            <a
+              href="#"
+              onClick={() => gtmPush({ event: "cta_click", cta: "hubungi_sales", placement: "navbar_mobile" })}
+              className="flex-1 text-center px-4 py-2 bg-accent text-accent-foreground text-sm font-semibold rounded-lg"
+            >
+              Hubungi sales
+            </a>
             <a
               href="https://office.synckerja.com/register"
+              onClick={() => gtmPush({ event: "cta_click", cta: "coba_gratis", placement: "navbar_mobile" })}
               className="flex-1 text-center px-4 py-2 border border-foreground text-sm font-semibold rounded-lg"
             >
               Coba gratis

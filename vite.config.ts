@@ -12,7 +12,26 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react(),
+    mode === "development" && componentTagger(),
+    // Reduce render-blocking CSS by preloading the stylesheet
+    // and switching rel after it finishes loading.
+    {
+      name: "async-stylesheet-links",
+      apply: "build",
+      transformIndexHtml(html) {
+        return html.replace(
+          /<link\s+rel="stylesheet"([^>]*?)href="([^"]+\.css)"([^>]*?)>/g,
+          (_m, preAttrs: string, href: string, postAttrs: string) =>
+            [
+              `<link rel="preload" as="style"${preAttrs}href="${href}"${postAttrs} onload="this.onload=null;this.rel='stylesheet'">`,
+              `<noscript><link rel="stylesheet"${preAttrs}href="${href}"${postAttrs}></noscript>`,
+            ].join("")
+        );
+      },
+    },
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
