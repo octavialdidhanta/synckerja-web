@@ -4,7 +4,7 @@ import heroPerson from "@/assets/hero-person.webp";
 const HeroSection = () => {
   return (
     <section className="hero-gradient">
-      <div className="container mx-auto px-4 py-16 lg:py-20">
+      <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left */}
           <div>
