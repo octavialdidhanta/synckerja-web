@@ -90,7 +90,7 @@ const CaseStudiesSection = () => {
             <button
               key={ind}
               onClick={() => setActive(ind)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 active === ind
                   ? "bg-primary-foreground text-foreground"
                   : "border border-primary-foreground/40 text-primary-foreground/90 hover:bg-primary-foreground/10"
@@ -111,10 +111,10 @@ const CaseStudiesSection = () => {
               </div>
             ))}
           </div>
-          <blockquote className="text-lg lg:text-xl font-medium text-foreground mb-4 leading-relaxed">
+          <blockquote className="text-lg lg:text-xl font-normal text-foreground mb-4 leading-relaxed">
             &ldquo;{data.quote}&rdquo;
           </blockquote>
-          <p className="font-bold text-foreground">{data.person}</p>
+          <p className="font-semibold text-foreground">{data.person}</p>
           <p className="text-sm text-muted-foreground">{data.company}</p>
         </div>
       </div>

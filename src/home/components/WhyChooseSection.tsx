@@ -47,10 +47,10 @@ const WhyChooseSection = () => {
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2 md:mb-4">
                   <Icon className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground mb-1">{item.title}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-1">{item.title}</h3>
                 <p className="text-sm text-muted-foreground mb-2">{item.desc}</p>
                 {item.link && (
-                  <a href="#" className="text-sm font-medium text-foreground underline hover:text-primary transition-colors">
+                  <a href="#" className="text-sm font-semibold text-foreground underline hover:text-primary transition-colors">
                     {item.link}
                   </a>
                 )}

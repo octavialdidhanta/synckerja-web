@@ -15,10 +15,10 @@ const FooterSection = () => {
                 className="size-14 md:size-12 shrink-0 rounded object-contain"
               />
               <div className="leading-tight">
-                <p className="text-base font-bold -mt-0.5">Synckerja Office</p>
+                <p className="text-base font-semibold -mt-0.5">Synckerja Office</p>
               </div>
             </div>
-            <p className="text-sm text-background/60">
+            <p className="text-sm text-background/75">
               Software HR terintegrasi untuk mengelola SDM secara efisien.
             </p>
           </div>
@@ -32,14 +32,14 @@ const FooterSection = () => {
               <ul className="space-y-2">
                 {col.links.map((l) => (
                   <li key={l}>
-                    <a href="#" className="text-sm text-background/60 hover:text-background transition-colors">{l}</a>
+                    <a href="#" className="text-sm text-background/75 hover:text-background transition-colors">{l}</a>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
-        <div className="border-t border-background/10 pt-6 text-center text-xs text-background/40">
+        <div className="border-t border-background/20 pt-6 text-center text-xs text-background/70">
           © 2025 Synckerja Office. All rights reserved.
         </div>
       </div>

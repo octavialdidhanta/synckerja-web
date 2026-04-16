@@ -54,7 +54,7 @@ const FeaturesSection = () => {
               <div className="w-full h-32 bg-muted rounded-lg mb-5 flex items-center justify-center">
                 <span className="text-3xl text-muted-foreground">📊</span>
               </div>
-              <h3 className="text-lg font-bold text-foreground mb-2">{f.title}</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2">{f.title}</h3>
               <p className="text-sm text-muted-foreground mb-4">{f.desc}</p>
               <ul className="space-y-2">
                 {f.items.map((item) => (
