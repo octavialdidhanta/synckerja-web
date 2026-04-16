@@ -45,11 +45,11 @@ const FeaturesSection = () => {
             Solusi HCM terintegrasi dengan fitur end-to-end dari rekrutmen, payroll, hingga performance management yang sesuai dengan kebutuhan industri Anda.
           </p>
         </div>
-        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 pl-4 md:pl-0 md:mx-0 scrollbar-hide">
           {features.map((f) => (
             <div
               key={f.title}
-              className="rounded-xl border border-primary/20 bg-card p-6 hover:shadow-lg transition-shadow min-w-[80%] sm:min-w-[75%] md:min-w-0 snap-start flex-shrink-0 md:flex-shrink"
+              className="rounded-xl border border-primary/20 bg-card p-6 hover:shadow-lg transition-shadow w-[75vw] min-w-[75vw] md:w-auto md:min-w-0 snap-start flex-shrink-0 md:flex-shrink"
             >
               <div className="w-full h-32 bg-muted rounded-lg mb-5 flex items-center justify-center">
                 <span className="text-3xl text-muted-foreground">📊</span>
