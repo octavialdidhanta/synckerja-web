@@ -63,4 +63,11 @@
   .section-red {
     background-color: hsl(var(--section-red));
   }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
