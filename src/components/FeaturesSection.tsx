@@ -49,7 +49,7 @@ const FeaturesSection = () => {
           {features.map((f) => (
             <div
               key={f.title}
-              className="rounded-xl border border-primary/20 bg-card p-6 hover:shadow-lg transition-shadow min-w-[280px] md:min-w-0 snap-start flex-shrink-0 md:flex-shrink"
+              className="rounded-xl border border-primary/20 bg-card p-6 hover:shadow-lg transition-shadow min-w-[80%] sm:min-w-[75%] md:min-w-0 snap-start flex-shrink-0 md:flex-shrink"
             >
               <div className="w-full h-32 bg-muted rounded-lg mb-5 flex items-center justify-center">
                 <span className="text-3xl text-muted-foreground">📊</span>
