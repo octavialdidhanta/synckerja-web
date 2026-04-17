@@ -98,14 +98,30 @@
   }
 }
 
-/* Hide scrollbars on any horizontal scroll area on the home page */
-.flex.overflow-x-auto::-webkit-scrollbar,
-[class*="overflow-x-auto"]::-webkit-scrollbar {
+/* Hide scrollbars on any scroll area on the home page */
+[class*="overflow-x-auto"]::-webkit-scrollbar,
+[class*="overflow-y-auto"]::-webkit-scrollbar,
+[class*="overflow-auto"]::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
 }
-[class*="overflow-x-auto"] {
+[class*="overflow-x-auto"],
+[class*="overflow-y-auto"],
+[class*="overflow-auto"] {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hide global page scrollbar */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+html,
+body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
