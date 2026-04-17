@@ -56,10 +56,11 @@ const HeroSection = () => {
               alt="Professional menggunakan Synckerja Office"
               width={500}
               height={500}
+              sizes="(max-width: 1023px) 92vw, 480px"
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="relative z-10"
+              className="relative z-10 mx-auto h-auto max-w-[min(100%,480px)] w-full"
             />
           </div>
         </div>
