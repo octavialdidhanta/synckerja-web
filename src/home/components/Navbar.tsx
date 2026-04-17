@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Menu, X, Globe } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ChevronDown, Menu, X, Globe } from "lucide-react";
 import logoUrl from "@/home/assets/pwa-192.png";
 import { gtmPush } from "@/share/analytics/gtm";
+import { FiturMegaMenuDesktop, FiturMegaMenuMobile } from "@/home/components/FiturMegaMenu";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [fiturMobileOpen, setFiturMobileOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
@@ -24,13 +27,14 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden lg:flex items-center gap-8">
-          <a
-            href="#fitur"
-            onClick={() => gtmPush({ event: "nav_click", item: "fitur", placement: "navbar_desktop" })}
+          <Link
+            to="/"
+            onClick={() => gtmPush({ event: "nav_click", item: "home", placement: "navbar_desktop" })}
             className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
           >
-            Fitur ▾
-          </a>
+            Home
+          </Link>
+          <FiturMegaMenuDesktop />
           <a
             href="#solusi"
             onClick={() => gtmPush({ event: "nav_click", item: "solusi", placement: "navbar_desktop" })}
@@ -89,7 +93,13 @@ const Navbar = () => {
         <button
           type="button"
           className="lg:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
+          onClick={() =>
+            setMobileOpen((open) => {
+              const next = !open;
+              if (!next) setFiturMobileOpen(false);
+              return next;
+            })
+          }
           aria-label={mobileOpen ? "Tutup menu" : "Buka menu"}
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
@@ -100,13 +110,39 @@ const Navbar = () => {
 
       {mobileOpen && (
         <div id="mobile-nav" className="lg:hidden border-t border-border bg-background px-4 py-4 space-y-3">
-          <a
-            href="#fitur"
-            onClick={() => gtmPush({ event: "nav_click", item: "fitur", placement: "navbar_mobile" })}
-            className="block text-sm font-semibold"
+          <Link
+            to="/"
+            onClick={() => {
+              gtmPush({ event: "nav_click", item: "home", placement: "navbar_mobile" });
+              setMobileOpen(false);
+              setFiturMobileOpen(false);
+            }}
+            className="block text-sm font-semibold text-foreground hover:text-primary"
           >
-            Fitur
-          </a>
+            Home
+          </Link>
+          <div>
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-md py-1 text-left text-sm font-semibold text-foreground"
+              onClick={() => setFiturMobileOpen((v) => !v)}
+              aria-expanded={fiturMobileOpen}
+              aria-controls="mobile-fitur-submenu"
+            >
+              Fitur
+              <ChevronDown className={`size-4 shrink-0 transition-transform ${fiturMobileOpen ? "rotate-180" : ""}`} aria-hidden />
+            </button>
+            {fiturMobileOpen && (
+              <div id="mobile-fitur-submenu" className="mt-2">
+                <FiturMegaMenuMobile
+                  onNavigate={() => {
+                    setMobileOpen(false);
+                    setFiturMobileOpen(false);
+                  }}
+                />
+              </div>
+            )}
+          </div>
           <a
             href="#solusi"
             onClick={() => gtmPush({ event: "nav_click", item: "solusi", placement: "navbar_mobile" })}
