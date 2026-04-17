@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
@@ -15,23 +15,21 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
-    // Reduce render-blocking CSS by preloading the stylesheet
-    // and switching rel after it finishes loading.
     {
       name: "async-stylesheet-links",
       apply: "build",
-      transformIndexHtml(html) {
+      transformIndexHtml(html: string) {
         return html.replace(
           /<link\s+rel="stylesheet"([^>]*?)href="([^"]+\.css)"([^>]*?)>/g,
-          (_m, preAttrs: string, href: string, postAttrs: string) =>
+          (_m: string, preAttrs: string, href: string, postAttrs: string) =>
             [
               `<link rel="preload" as="style"${preAttrs}href="${href}"${postAttrs} onload="this.onload=null;this.rel='stylesheet'">`,
               `<noscript><link rel="stylesheet"${preAttrs}href="${href}"${postAttrs}></noscript>`,
             ].join("")
         );
       },
-    },
-  ].filter(Boolean),
+    } as Plugin,
+  ].filter(Boolean) as Plugin[],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

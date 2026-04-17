@@ -48,11 +48,12 @@ export default function DeferredRender({
     const idleId = ric ? ric(reveal, { timeout: maxWaitMs }) : undefined;
 
     if (!("IntersectionObserver" in window)) {
-      const t = window.setTimeout(reveal, maxWaitMs);
+      const w = window as Window & typeof globalThis;
+      const t = w.setTimeout(reveal, maxWaitMs);
       return () => {
         cancelled = true;
         if (idleId != null && cic) cic(idleId);
-        window.clearTimeout(t);
+        w.clearTimeout(t);
       };
     }
 
