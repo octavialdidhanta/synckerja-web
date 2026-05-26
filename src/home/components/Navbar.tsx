@@ -4,6 +4,7 @@ import { ChevronDown, Menu, X, Globe } from "lucide-react";
 import logoUrl from "@/home/assets/pwa-192.png";
 import { gtmPush } from "@/share/analytics/gtm";
 import { FiturMegaMenuDesktop, FiturMegaMenuMobile } from "@/home/components/FiturMegaMenu";
+import { PRIVACY_POLICY_URL } from "@/home/constants/legal";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -55,6 +56,13 @@ const Navbar = () => {
             className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
           >
             Resources ▾
+          </a>
+          <a
+            href={PRIVACY_POLICY_URL}
+            onClick={() => gtmPush({ event: "nav_click", item: "privacy_policy", placement: "navbar_desktop" })}
+            className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+          >
+            Privacy Policy
           </a>
         </div>
 
@@ -163,6 +171,13 @@ const Navbar = () => {
             className="block text-sm font-semibold"
           >
             Resources
+          </a>
+          <a
+            href={PRIVACY_POLICY_URL}
+            onClick={() => gtmPush({ event: "nav_click", item: "privacy_policy", placement: "navbar_mobile" })}
+            className="block text-sm font-semibold"
+          >
+            Privacy Policy
           </a>
           <div className="flex gap-3 pt-2">
             <a

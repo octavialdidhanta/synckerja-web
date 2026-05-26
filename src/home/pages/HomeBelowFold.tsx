@@ -24,9 +24,7 @@ export default function HomeBelowFold() {
       <DeferredRender>
         <FAQSection />
       </DeferredRender>
-      <DeferredRender>
-        <FooterSection />
-      </DeferredRender>
+      <FooterSection />
     </>
   );
 }
