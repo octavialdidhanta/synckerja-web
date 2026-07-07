@@ -4,13 +4,7 @@ import { ChevronDown, Menu, X, Globe } from "lucide-react";
 import logoUrl from "@/home/assets/pwa-192.png";
 import { gtmPush } from "@/share/analytics/gtm";
 import { FiturMegaMenuDesktop, FiturMegaMenuMobile } from "@/home/components/FiturMegaMenu";
-import {
-  APP_NAME,
-  PRIVACY_POLICY_LINK_TEXT,
-  PRIVACY_POLICY_URL,
-  TERMS_OF_SERVICE_LINK_TEXT,
-  TERMS_OF_SERVICE_URL,
-} from "@/home/constants/legal";
+import { APP_NAME } from "@/home/constants/legal";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -62,20 +56,6 @@ const Navbar = () => {
             className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
           >
             Resources ▾
-          </a>
-          <a
-            href={PRIVACY_POLICY_URL}
-            onClick={() => gtmPush({ event: "nav_click", item: "privacy_policy", placement: "navbar_desktop" })}
-            className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
-          >
-            {PRIVACY_POLICY_LINK_TEXT}
-          </a>
-          <a
-            href={TERMS_OF_SERVICE_URL}
-            onClick={() => gtmPush({ event: "nav_click", item: "terms_of_service", placement: "navbar_desktop" })}
-            className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
-          >
-            {TERMS_OF_SERVICE_LINK_TEXT}
           </a>
         </div>
 
@@ -184,20 +164,6 @@ const Navbar = () => {
             className="block text-sm font-semibold"
           >
             Resources
-          </a>
-          <a
-            href={PRIVACY_POLICY_URL}
-            onClick={() => gtmPush({ event: "nav_click", item: "privacy_policy", placement: "navbar_mobile" })}
-            className="block text-sm font-semibold"
-          >
-            {PRIVACY_POLICY_LINK_TEXT}
-          </a>
-          <a
-            href={TERMS_OF_SERVICE_URL}
-            onClick={() => gtmPush({ event: "nav_click", item: "terms_of_service", placement: "navbar_mobile" })}
-            className="block text-sm font-semibold"
-          >
-            {TERMS_OF_SERVICE_LINK_TEXT}
           </a>
           <div className="flex gap-3 pt-2">
             <a
