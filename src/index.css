@@ -64,6 +64,15 @@
     --section-warm: 204 30% 97%;
     --section-red: 204 71% 38%;
 
+    --sidebar-background: 210 20% 98%;
+    --sidebar-foreground: 210 25% 20%;
+    --sidebar-primary: 204 71% 38%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 20% 96%;
+    --sidebar-accent-foreground: 210 25% 20%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 204 71% 38%;
+
     font-family: 'Inter', sans-serif;
   }
 }
@@ -95,6 +104,19 @@
     display: none;
     width: 0;
     height: 0;
+  }
+
+  /* Admin: header full-width on top, sidebar starts below header */
+  .admin-shell .group.peer[data-side="left"] > div:first-child {
+    height: calc(100svh - var(--admin-header-height, 3.5rem));
+  }
+
+  .admin-shell .group.peer[data-side="left"] > div:last-child {
+    top: var(--admin-header-height, 3.5rem);
+    height: calc(100svh - var(--admin-header-height, 3.5rem));
+    inset: auto;
+    bottom: 0;
+    left: 0;
   }
 }
 
