@@ -1,0 +1,33 @@
+---
+description: Wajib update documents/synckerja-web setiap ubah Supabase migration (shared DB dengan project synckerja)
+globs: supabase/migrations/**/*.sql
+alwaysApply: false
+---
+
+# Shared Supabase — synckerja-web ↔ synckerja
+
+Database Supabase dipakai bersama **synckerja-web** dan **synckerja** (office). Setiap perubahan migration HARUS didokumentasikan agar project lain tidak error.
+
+## Saat membuat/mengubah file di `supabase/migrations/`
+
+1. **Tambah entry baru di bagian ATAS** [`documents/synckerja-web`](documents/synckerja-web) — ikuti [`documents/TEMPLATE-synckerja-web.md`](documents/TEMPLATE-synckerja-web.md)
+2. Cantumkan: file migration, objek DB (tabel/RPC), dampak ke office, status apply, langkah untuk tim synckerja
+3. **Jangan apply ke Supabase production** tanpa menyebutkan di dokumen jika tim office belum review (kecuali user minta apply)
+
+## Prinsip migration (wajib)
+
+- **Additive first** — prefer ADD table/RPC, hindari ALTER RLS/trigger office
+- CMS admin: `SECURITY DEFINER` + `is_cms_admin()`, bukan RLS write ke tabel tenant
+- Satu org per RPC update untuk data tenant; katalog plan/add-on adalah global
+- Jangan pakai service role key di frontend
+
+## Sebelum selesai task migration
+
+- [ ] File SQL ada di `supabase/migrations/`
+- [ ] Entry changelog di `documents/synckerja-web` sudah di-update
+- [ ] Dampak ke synckerja office dijelaskan (breaking atau tidak)
+- [ ] User diingatkan untuk serahkan `documents/synckerja-web` + file migration ke tim synckerja
+
+## Perubahan dari synckerja → synckerja-web
+
+Jika user menyebut perubahan dari project synckerja, baca [`documents/synckerja`](documents/synckerja) dan pastikan migration sinkron sebelum lanjut.

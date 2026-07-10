@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useUpdateOrganizationSubscription } from "@/admin/hooks/useUpdateOrganizationSubscription";
+import { useUpdateOrganizationSettings } from "@/admin/hooks/useUpdateOrganizationSettings";
+import { useOrganizationModuleAdjustments } from "@/admin/hooks/useOrganizationModuleAdjustments";
+import { useOrganizationSalesModules } from "@/admin/hooks/useOrganizationSalesModules";
+import { useUpdateOrganizationSalesModules } from "@/admin/hooks/useUpdateOrganizationSalesModules";
 import { useSubscriptionAdjustments } from "@/admin/hooks/useSubscriptionAdjustments";
+import {
+  createDefaultSalesModulesRecord,
+  SALES_MODULE_CATALOG,
+  salesModuleLabel,
+  type SalesModuleKey,
+} from "@/admin/lib/salesModuleCatalog";
 import {
   formatWibDate,
   previewEffectiveStatus,
@@ -31,7 +41,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/share/ui/sheet";
-import { Tabs, TabsList, TabsTrigger } from "@/share/ui/tabs";
+import { Switch } from "@/share/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/share/ui/tabs";
 import { Textarea } from "@/share/ui/textarea";
 import { toast } from "@/share/ui/sonner";
 
@@ -54,17 +65,41 @@ function StatusBadge({ status }: { status: string }) {
   return <Badge className={cn(className)}>{status}</Badge>;
 }
 
+function TenantTypeBadge({ selfServiceEnabled }: { selfServiceEnabled: boolean }) {
+  return selfServiceEnabled ? (
+    <Badge className="border-transparent bg-blue-100 text-blue-800">Mandiri</Badge>
+  ) : (
+    <Badge className="border-transparent bg-amber-100 text-amber-900">Sales</Badge>
+  );
+}
+
 export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditSubscriptionSheetProps) {
   const [isTrial, setIsTrial] = useState(false);
   const [trialDateInput, setTrialDateInput] = useState("");
   const [subscriptionDateInput, setSubscriptionDateInput] = useState("");
   const [reason, setReason] = useState("");
+  const [selfServiceEnabled, setSelfServiceEnabled] = useState(true);
+  const [settingsReason, setSettingsReason] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [settingsConfirmOpen, setSettingsConfirmOpen] = useState(false);
+  const [modulesConfirmOpen, setModulesConfirmOpen] = useState(false);
+  const [moduleAccess, setModuleAccess] = useState<Record<SalesModuleKey, boolean>>(
+    createDefaultSalesModulesRecord,
+  );
+  const [modulesReason, setModulesReason] = useState("");
+  const [activeTab, setActiveTab] = useState<"subscription" | "tenant" | "history">("subscription");
 
   const updateMutation = useUpdateOrganizationSubscription();
+  const settingsMutation = useUpdateOrganizationSettings();
+  const modulesMutation = useUpdateOrganizationSalesModules();
+  const { data: salesModules, isLoading: salesModulesLoading } = useOrganizationSalesModules(
+    row?.organization_id ?? null,
+  );
   const { data: adjustments, isLoading: adjustmentsLoading } = useSubscriptionAdjustments(
     row?.organization_id ?? null,
   );
+  const { data: moduleAdjustments, isLoading: moduleAdjustmentsLoading } =
+    useOrganizationModuleAdjustments(row?.organization_id ?? null);
 
   useEffect(() => {
     if (!row || !open) return;
@@ -72,8 +107,22 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
     setTrialDateInput(utcToWibDateInput(row.trial_end_date));
     setSubscriptionDateInput(utcToWibDateInput(row.subscription_end_date));
     setReason("");
+    setSelfServiceEnabled(row.subscription_self_service_enabled);
+    setSettingsReason("");
     setConfirmOpen(false);
+    setSettingsConfirmOpen(false);
+    setModulesConfirmOpen(false);
+    setModulesReason("");
+    setActiveTab("subscription");
   }, [row, open]);
+
+  useEffect(() => {
+    if (!salesModules?.is_sales_tenant) {
+      setModuleAccess(createDefaultSalesModulesRecord());
+      return;
+    }
+    setModuleAccess(salesModules.modules);
+  }, [salesModules]);
 
   const trialEndUtc = trialDateInput ? wibDateInputToUtcEndOfDay(trialDateInput) : null;
   const subscriptionEndUtc = subscriptionDateInput
@@ -106,6 +155,21 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
     return null;
   }, [isTrial, trialDateInput, subscriptionDateInput, reason, trialEndUtc, subscriptionEndUtc]);
 
+  const settingsValidationError = useMemo(() => {
+    if (settingsReason.trim().length < 3) return "Alasan wajib diisi (min. 3 karakter).";
+    return null;
+  }, [settingsReason]);
+
+  const modulesValidationError = useMemo(() => {
+    if (modulesReason.trim().length < 3) return "Alasan wajib diisi (min. 3 karakter).";
+    return null;
+  }, [modulesReason]);
+
+  const modulesDirty = useMemo(() => {
+    if (!salesModules?.is_sales_tenant) return false;
+    return SALES_MODULE_CATALOG.some(({ key }) => moduleAccess[key] !== salesModules.modules[key]);
+  }, [moduleAccess, salesModules]);
+
   const handleSave = async () => {
     if (!row || validationError) return;
 
@@ -127,18 +191,82 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
     }
   };
 
+  const handleSaveSettings = async () => {
+    if (!row || settingsValidationError) return;
+
+    try {
+      await settingsMutation.mutateAsync({
+        organization_id: row.organization_id,
+        subscription_self_service_enabled: selfServiceEnabled,
+        reason: settingsReason.trim(),
+      });
+      toast.success("Pengaturan tenant berhasil diperbarui.");
+      setSettingsConfirmOpen(false);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Gagal memperbarui pengaturan tenant.";
+      toast.error(message.includes("not allowed") ? "Akses ditolak." : message);
+      setSettingsConfirmOpen(false);
+    }
+  };
+
+  const handleSaveModules = async () => {
+    if (!row || modulesValidationError) return;
+
+    try {
+      await modulesMutation.mutateAsync({
+        organization_id: row.organization_id,
+        modules: moduleAccess,
+        reason: modulesReason.trim(),
+      });
+      toast.success("Akses modul berhasil diperbarui.");
+      setModulesConfirmOpen(false);
+      setModulesReason("");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Gagal memperbarui akses modul.";
+      toast.error(message.includes("not allowed") ? "Akses ditolak." : message);
+      setModulesConfirmOpen(false);
+    }
+  };
+
   if (!row) return null;
+
+  const tenantTypeDirty = selfServiceEnabled !== row.subscription_self_service_enabled;
 
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent className="overflow-y-auto sm:max-w-md">
-          <SheetHeader>
+          <SheetHeader className="space-y-3">
             <SheetTitle>Atur Subscription</SheetTitle>
-            <SheetDescription>{row.company_name}</SheetDescription>
+            <div className="flex flex-wrap items-center gap-2">
+              <SheetDescription className="mb-0 text-foreground">{row.company_name}</SheetDescription>
+              <TenantTypeBadge selfServiceEnabled={selfServiceEnabled} />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Tipe tenant:{" "}
+              <span className="font-medium text-foreground">
+                {selfServiceEnabled ? "Mandiri (self-service)" : "Sales (tanpa /subscription di office)"}
+              </span>
+              {tenantTypeDirty ? (
+                <span className="ml-1 text-amber-700">· belum disimpan</span>
+              ) : null}
+            </p>
           </SheetHeader>
 
-          <div className="mt-6 space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) =>
+              setActiveTab(value as "subscription" | "tenant" | "history")
+            }
+            className="mt-6"
+          >
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="subscription">Subscription</TabsTrigger>
+              <TabsTrigger value="tenant">Tenant</TabsTrigger>
+              <TabsTrigger value="history">Riwayat</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="subscription" className="mt-4 space-y-6">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">Status saat ini:</span>
               <StatusBadge status={row.effective_status} />
@@ -209,37 +337,216 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
               />
             </div>
 
-            <div className="space-y-3">
-              <p className="text-sm font-medium">Riwayat perubahan</p>
+            </TabsContent>
+
+            <TabsContent value="tenant" className="mt-4 space-y-4">
+            <div>
+                <p className="text-sm font-medium">Pengaturan tenant</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Tenant sales tidak melihat halaman subscription di office. Perpanjang subscription
+                  via tab Subscription.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 rounded-md border p-3">
+                <div className="space-y-1">
+                  <Label htmlFor="self-service-toggle">Akses halaman subscription mandiri</Label>
+                  <p className="text-xs text-muted-foreground">
+                    {selfServiceEnabled
+                      ? "Tenant bisa akses /subscription di office"
+                      : "Tenant sales — halaman subscription disembunyikan"}
+                  </p>
+                </div>
+                <Switch
+                  id="self-service-toggle"
+                  checked={selfServiceEnabled}
+                  onCheckedChange={setSelfServiceEnabled}
+                />
+              </div>
+
+              {!selfServiceEnabled && (
+                <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                  Tenant expired tidak bisa renew sendiri. Perpanjang tanggal subscription di tab
+                  Subscription.
+                </p>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="settings-reason">Alasan perubahan pengaturan</Label>
+                <Textarea
+                  id="settings-reason"
+                  placeholder="Contoh: Tenant didaftarkan oleh tim sales"
+                  value={settingsReason}
+                  onChange={(e) => setSettingsReason(e.target.value)}
+                  rows={2}
+                />
+              </div>
+
+              <Button
+                variant="secondary"
+                className="w-full"
+                disabled={
+                  !!settingsValidationError ||
+                  settingsMutation.isPending ||
+                  selfServiceEnabled === row.subscription_self_service_enabled
+                }
+                onClick={() => setSettingsConfirmOpen(true)}
+              >
+                Simpan pengaturan tenant
+              </Button>
+
+              {!selfServiceEnabled && (
+                <div className="space-y-4 border-t pt-4">
+                  <div>
+                    <p className="text-sm font-medium">Akses modul (upsell)</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Menu tetap tampil di office; modul nonaktif menampilkan halaman upsell.
+                      Dashboard selalu aktif.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline">Dashboard: Selalu aktif</Badge>
+                    <Badge variant="outline">Subscription: Hidden (sales)</Badge>
+                  </div>
+
+                  {salesModulesLoading && (
+                    <p className="text-sm text-muted-foreground">Memuat modul...</p>
+                  )}
+
+                  {!salesModulesLoading && (
+                    <div className="space-y-2">
+                      {SALES_MODULE_CATALOG.map(({ key, label }) => (
+                        <div
+                          key={key}
+                          className="flex items-center justify-between gap-3 rounded-md border p-3"
+                        >
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium">{label}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {moduleAccess[key]
+                                ? "Aktif — tenant bisa akses modul"
+                                : "Blocked — upsell di office"}
+                            </p>
+                          </div>
+                          <Switch
+                            checked={moduleAccess[key]}
+                            onCheckedChange={(checked) =>
+                              setModuleAccess((prev) => ({ ...prev, [key]: checked }))
+                            }
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="modules-reason">Alasan perubahan modul</Label>
+                    <Textarea
+                      id="modules-reason"
+                      placeholder="Contoh: Aktifkan Finance untuk evaluasi pilot"
+                      value={modulesReason}
+                      onChange={(e) => setModulesReason(e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+
+                  <Button
+                    className="w-full"
+                    disabled={
+                      !!modulesValidationError ||
+                      modulesMutation.isPending ||
+                      !modulesDirty ||
+                      salesModulesLoading
+                    }
+                    onClick={() => setModulesConfirmOpen(true)}
+                  >
+                    Simpan modul
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="history" className="mt-4 space-y-4">
+              <div className="space-y-3">
+                <p className="text-sm font-medium">Subscription & tenant</p>
               {adjustmentsLoading && (
                 <p className="text-sm text-muted-foreground">Memuat riwayat...</p>
               )}
               {!adjustmentsLoading && (!adjustments || adjustments.length === 0) && (
                 <p className="text-sm text-muted-foreground">Belum ada riwayat.</p>
               )}
-              {adjustments?.map((item) => (
-                <div key={item.id} className="rounded-md border p-3 text-xs">
-                  <p className="font-medium">{item.reason}</p>
-                  <p className="mt-1 text-muted-foreground">
-                    {formatWibDate(item.created_at)} ·{" "}
-                    {item.after_state.is_trial ? "trial" : "paid"} · status{" "}
-                    {item.after_state.status}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+              {adjustments?.map((item) => {
+                const isSettingsChange =
+                  item.after_state.subscription_self_service_enabled !== undefined &&
+                  item.after_state.status === undefined;
+
+                return (
+                  <div key={item.id} className="rounded-md border p-3 text-xs">
+                    <p className="font-medium">{item.reason}</p>
+                    <p className="mt-1 text-muted-foreground">
+                      {formatWibDate(item.created_at)}
+                      {isSettingsChange ? (
+                        <>
+                          {" · "}
+                          {item.after_state.subscription_self_service_enabled
+                            ? "Mandiri (self-service)"
+                            : "Sales (tanpa /subscription)"}
+                        </>
+                      ) : (
+                        <>
+                          {" · "}
+                          {item.after_state.is_trial ? "trial" : "paid"} · status{" "}
+                          {item.after_state.status}
+                        </>
+                      )}
+                    </p>
+                  </div>
+                );
+              })}
+              </div>
+
+              <div className="space-y-3 border-t pt-4">
+                <p className="text-sm font-medium">Modul (upsell)</p>
+                {moduleAdjustmentsLoading && (
+                  <p className="text-sm text-muted-foreground">Memuat riwayat modul...</p>
+                )}
+                {!moduleAdjustmentsLoading &&
+                  (!moduleAdjustments || moduleAdjustments.length === 0) && (
+                    <p className="text-sm text-muted-foreground">Belum ada riwayat modul.</p>
+                  )}
+                {moduleAdjustments?.map((item) => {
+                  const enabledKeys = Object.entries(item.after_state.modules ?? {})
+                    .filter(([, enabled]) => enabled)
+                    .map(([key]) => salesModuleLabel(key as SalesModuleKey));
+
+                  return (
+                    <div key={item.id} className="rounded-md border p-3 text-xs">
+                      <p className="font-medium">{item.reason}</p>
+                      <p className="mt-1 text-muted-foreground">
+                        {formatWibDate(item.created_at)}
+                        {" · "}
+                        Aktif: {enabledKeys.length > 0 ? enabledKeys.join(", ") : "—"}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </TabsContent>
+          </Tabs>
 
           <SheetFooter className="mt-6 gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Batal
             </Button>
-            <Button
-              disabled={!!validationError || updateMutation.isPending}
-              onClick={() => setConfirmOpen(true)}
-            >
-              Simpan
-            </Button>
+            {activeTab === "subscription" && (
+              <Button
+                disabled={!!validationError || updateMutation.isPending}
+                onClick={() => setConfirmOpen(true)}
+              >
+                Simpan
+              </Button>
+            )}
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -270,6 +577,67 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
               }}
             >
               {updateMutation.isPending ? "Menyimpan..." : "Ya, simpan"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={settingsConfirmOpen} onOpenChange={setSettingsConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi pengaturan tenant</AlertDialogTitle>
+            <AlertDialogDescription>
+              Anda akan mengubah tipe tenant untuk <strong>{row.company_name}</strong> menjadi{" "}
+              <strong>{selfServiceEnabled ? "Mandiri" : "Sales"}</strong>.
+              {settingsReason.trim() && (
+                <>
+                  <br />
+                  <br />
+                  Alasan: {settingsReason.trim()}
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={settingsMutation.isPending}>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={settingsMutation.isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleSaveSettings();
+              }}
+            >
+              {settingsMutation.isPending ? "Menyimpan..." : "Ya, simpan"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={modulesConfirmOpen} onOpenChange={setModulesConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Konfirmasi akses modul</AlertDialogTitle>
+            <AlertDialogDescription>
+              Anda akan memperbarui modul aktif untuk <strong>{row.company_name}</strong>.
+              {modulesReason.trim() && (
+                <>
+                  <br />
+                  <br />
+                  Alasan: {modulesReason.trim()}
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={modulesMutation.isPending}>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={modulesMutation.isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleSaveModules();
+              }}
+            >
+              {modulesMutation.isPending ? "Menyimpan..." : "Ya, simpan"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

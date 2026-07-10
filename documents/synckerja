@@ -1,0 +1,13 @@
+# Handoff: perubahan Supabase dari project synckerja (office)
+
+File ini diisi oleh tim **synckerja** (`office.synckerja.com`) setiap ada perubahan database yang mempengaruhi Supabase shared.
+
+Tim **synckerja-web** memeriksa file ini sebelum deploy dan menyalin migration terkait ke repo ini.
+
+---
+
+## Belum ada entry
+
+Saat tim synckerja menambah perubahan, gunakan format yang sama dengan [`TEMPLATE-synckerja-web.md`](./TEMPLATE-synckerja-web.md) (ganti "Project sumber" menjadi **synckerja**).
+
+Entry terbaru selalu di **bagian atas** (di bawah header ini).

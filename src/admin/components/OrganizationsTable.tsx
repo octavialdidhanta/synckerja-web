@@ -23,6 +23,14 @@ function formatEndDate(row: AdminOrganizationRow) {
   return formatDate(row.is_trial ? row.trial_end_date : row.subscription_end_date);
 }
 
+function TenantTypeBadge({ selfServiceEnabled }: { selfServiceEnabled: boolean }) {
+  return selfServiceEnabled ? (
+    <Badge className="border-transparent bg-blue-100 text-blue-800">Mandiri</Badge>
+  ) : (
+    <Badge className="border-transparent bg-amber-100 text-amber-900">Sales</Badge>
+  );
+}
+
 function StatusBadge({ status }: { status: string }) {
   const className =
     status === "active"
@@ -102,6 +110,7 @@ export default function OrganizationsTable() {
                   <TableHead>Perusahaan</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Plan</TableHead>
+                  <TableHead>Tipe</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Trial</TableHead>
                   <TableHead>Berakhir</TableHead>
@@ -116,6 +125,9 @@ export default function OrganizationsTable() {
                     <TableCell className="font-medium">{row.company_name}</TableCell>
                     <TableCell>{row.email ?? "—"}</TableCell>
                     <TableCell>{row.plan_name ?? "—"}</TableCell>
+                    <TableCell>
+                      <TenantTypeBadge selfServiceEnabled={row.subscription_self_service_enabled} />
+                    </TableCell>
                     <TableCell>
                       <StatusBadge status={row.effective_status} />
                     </TableCell>
