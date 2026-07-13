@@ -43,7 +43,7 @@ const WaBlueFaq = () => {
   return (
     <section className="bg-background py-14 md:py-20">
       <div className="container mx-auto px-4">
-        <h2 className="max-w-3xl text-2xl font-extrabold text-foreground md:text-3xl">
+        <h2 className="mx-auto max-w-3xl text-center text-2xl font-extrabold text-foreground md:text-3xl">
           FAQ seputar verifikasi centang biru WhatsApp bersama Synckerja Office
         </h2>
         <div className="mx-auto mt-10 max-w-3xl">

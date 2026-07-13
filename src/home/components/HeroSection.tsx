@@ -1,66 +1,64 @@
 import { CheckCircle } from "lucide-react";
-import heroPerson from "@/home/assets/hero-person.webp";
+import heroPlatform from "@/home/assets/hero-platform.webp";
 import { gtmPush } from "@/share/analytics/gtm";
 
 const HeroSection = () => {
   return (
     <section className="hero-gradient">
       <div className="container mx-auto px-4 py-5 md:py-8 lg:py-14">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left */}
+        <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <h1 className="mb-6 text-3xl font-extrabold leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl lg:leading-[1.12]">
-              <span className="block">
-                Satu sistem untuk seluruh&nbsp;siklus&nbsp;SDM
-              </span>
-              <span className="mt-2 block md:mt-2.5">
-                <span className="text-muted-foreground"></span>
-                Lebih rapi, lebih cepat, lebih terukur
-              </span>
+            <h1 className="text-3xl font-extrabold leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl lg:leading-[1.12]">
+              Satu sistem untuk tim penjualan, dan operasional bisnis.
             </h1>
-            <ul className="space-y-3 mb-8">
+            <p className="mt-3 text-sm text-muted-foreground md:text-base">
+              SDM, CRM, manajemen proyek, media sosial, dan iklan, semua dalam satu platform
+            </p>
+            <p className="mt-2 text-sm font-medium text-primary md:text-base">
+              Lebih rapi, lebih cepat, lebih terukur
+            </p>
+            <ul className="mb-8 mt-6 space-y-3">
               {[
-                "Insight & bantuan AI agar tim HR fokus pada prioritas bisnis, bukan hanya laporan",
-                "Otomatisasi alur administrasi sehari-hari sehingga pekerjaan manual turun drastis",
-                "Kurangi pekerjaan ulang (duplikasi data, form, approval) di seluruh modul HR",
-                "Manajemen proyek dan media sosial berbasis AI untuk kolaborasi tim yang terarah",
+                "CRM terintegrasi: lacak pelanggan dan pipeline sales dalam satu dashboard",
+                "Kelola proyek, media sosial, dan iklan tanpa pindah-pindah tools",
+                "SDM dan administrasi tim dalam sistem yang sama",
+                "Pantau performa tim dan operasional dari satu dashboard",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-muted-foreground">
-                  <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
-            <div className="flex flex-wrap gap-3 mb-8">
+            <div className="mb-8 flex flex-wrap gap-3">
               <a
                 href="#"
                 onClick={() => gtmPush({ event: "cta_click", cta: "whatsapp_sales", placement: "hero" })}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-semibold text-accent-foreground transition-opacity hover:opacity-90"
               >
                 💬 WhatsApp sales
               </a>
               <a
                 href="https://office.synckerja.com/register"
                 onClick={() => gtmPush({ event: "cta_click", cta: "coba_gratis", placement: "hero" })}
-                className="px-6 py-3 border border-border text-foreground font-semibold rounded-lg hover:bg-muted transition-colors"
+                className="rounded-lg border border-border px-6 py-3 font-semibold text-foreground transition-colors hover:bg-muted"
               >
                 Coba gratis
               </a>
             </div>
           </div>
 
-          {/* Right */}
-          <div className="flex justify-center relative">
+          <div className="relative flex justify-center">
             <img
-              src={heroPerson}
-              alt="Professional menggunakan Synckerja Office"
-              width={500}
-              height={500}
+              src={heroPlatform}
+              alt="Dashboard Synckerja Office untuk SDM, CRM, proyek, media sosial, dan iklan terintegrasi"
+              width={520}
+              height={480}
               sizes="(max-width: 1023px) 92vw, 480px"
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="relative z-10 mx-auto h-auto max-w-[min(100%,480px)] w-full"
+              className="relative z-10 mx-auto h-auto w-full max-w-[min(100%,480px)]"
             />
           </div>
         </div>

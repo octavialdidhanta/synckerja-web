@@ -24,13 +24,11 @@ const WaBlueProofStat = () => {
             </div>
           </div>
           <h2 className="max-w-3xl text-2xl font-extrabold leading-snug text-primary md:text-3xl">
-            Saat identitas jelas, pelanggan berani melangkah ke tahap berikutnya—dari sekadar baca pesan menjadi
-            transaksi nyata.
+            Kalau identitas jelas, pelanggan lebih berani lanjut dari baca pesan sampai transaksi.
           </h2>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Synckerja Office membantu Anda memetakan gap kepercayaan: nomor yang belum meyakinkan, konten profil yang
-            belum selaras brand, hingga dokumentasi verifikasi. Targetnya sederhana: percakapan yang dianggap serius
-            lebih dulu, baru optimasi kecepatan balasan.
+            Synckerja Office bantu bereskan hal yang bikin pelanggan ragu: nomor kurang meyakinkan, profil belum selaras
+            brand, sampai syarat verifikasi yang belum lengkap. Kepercayaan dulu baru tim bisa fokus menjual dan melayani.
           </p>
         </div>
       </div>

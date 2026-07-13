@@ -1,5 +1,7 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy } from "react";
 import Navbar from "@/home/components/Navbar";
+import { APP_NAME } from "@/home/constants/legal";
+import { useDocumentTitle } from "@/home/hooks/useDocumentTitle";
 
 const FooterSection = lazy(() => import("@/home/components/FooterSection"));
 import WaBlueHero from "./sections/WaBlueHero";
@@ -11,27 +13,21 @@ import WaBlueTestimonial from "./sections/WaBlueTestimonial";
 import WaBlueFaq from "./sections/WaBlueFaq";
 import WaBlueClosingCta from "./sections/WaBlueClosingCta";
 
-const PAGE_TITLE = "Centang Biru WhatsApp (Verified) — Synckerja Office";
+const PAGE_TITLE = `Centang Biru WhatsApp: ${APP_NAME}`;
 
 const WhatsappCentangBiruPage = () => {
-  useEffect(() => {
-    const previous = document.title;
-    document.title = PAGE_TITLE;
-    return () => {
-      document.title = previous;
-    };
-  }, []);
+  useDocumentTitle(PAGE_TITLE);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main>
         <WaBlueHero />
-        <WaBlueProofStat />
         <WaBlueTrustCards />
         <WaBlueTabShowcase />
         <WaBlueWhyOffice />
         <WaBlueTestimonial />
+        <WaBlueProofStat />
         <WaBlueFaq />
         <WaBlueClosingCta />
       </main>

@@ -7,10 +7,67 @@ export type AdminSubscriptionPlan = {
   base_price_per_member: number;
   annual_discount_percentage: number | null;
   jumlah_hari_trial: number | null;
+  max_members: number | null;
   is_active: boolean;
   subscriber_count: number;
+  enabled_module_count: number;
+  /** Di-enrich di client dari subscription_plan_module_access */
+  enabled_module_labels?: string[];
   created_at: string;
   updated_at: string;
+};
+
+export type PlanModules = {
+  subscription_plan_id: string;
+  modules: Record<string, boolean>;
+};
+
+export type PlanModuleAdjustmentRow = {
+  id: string;
+  subscription_plan_id: string;
+  adjusted_by: string;
+  reason: string;
+  before_state: { modules: Record<string, boolean> };
+  after_state: { modules: Record<string, boolean> };
+  created_at: string;
+};
+
+export type CreateSubscriptionPlanInput = {
+  name: string;
+  base_price_per_member: number;
+  modules: Record<string, boolean>;
+  is_active: boolean;
+  reason: string;
+  max_members: number | null;
+  description?: string | null;
+  annual_discount_percentage?: number | null;
+  jumlah_hari_trial?: number | null;
+};
+
+export type CreateSubscriptionPlanResult = {
+  id: string;
+  name: string;
+  description: string | null;
+  base_price_per_member: number;
+  annual_discount_percentage: number | null;
+  jumlah_hari_trial: number | null;
+  max_members: number | null;
+  is_active: boolean;
+  features: string[];
+  modules: Record<string, boolean>;
+};
+
+export type UpdatePlanModulesInput = {
+  plan_id: string;
+  modules: Record<string, boolean>;
+  reason: string;
+};
+
+export type UpdatePlanModulesResult = {
+  subscription_plan_id: string;
+  modules: Record<string, boolean>;
+  before_state: { modules: Record<string, boolean> };
+  after_state: { modules: Record<string, boolean> };
 };
 
 export type AdminSubscriptionAddOn = {
@@ -56,6 +113,7 @@ export type UpdateSubscriptionPlanInput = {
   base_price_per_member: number;
   annual_discount_percentage: number | null;
   jumlah_hari_trial: number | null;
+  max_members: number | null;
   is_active: boolean;
   reason: string;
 };

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440" fill="none" role="img" aria-labelledby="waTabHeroTitle waTabHeroDesc">
+  <title id="waTabHeroTitle">Operasional WhatsApp Business terintegrasi</title>
+  <desc id="waTabHeroDesc">Ilustrasi WhatsApp Business Bisnis Anda dengan dashboard tim, automasi, dan CRM terintegrasi</desc>
+
+  <ellipse cx="200" cy="220" rx="170" ry="190" fill="#E8F4FC"/>
+  <ellipse cx="320" cy="100" rx="60" ry="60" fill="#F0F7FC"/>
+
+  <g transform="translate(36 56)">
+    <rect x="0" y="0" width="168" height="300" rx="22" fill="#1E293B"/>
+    <rect x="6" y="8" width="156" height="284" rx="18" fill="#FFFFFF"/>
+
+    <rect x="6" y="8" width="156" height="44" rx="18" fill="#128C7E"/>
+    <rect x="6" y="36" width="156" height="16" fill="#128C7E"/>
+    <circle cx="28" cy="30" r="10" fill="#FFFFFF" fill-opacity="0.25"/>
+    <rect x="44" y="24" width="56" height="6" rx="3" fill="#FFFFFF" fill-opacity="0.9"/>
+    <rect x="44" y="34" width="40" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.55"/>
+
+    <circle cx="84" cy="88" r="24" fill="#E2E8F0"/>
+    <text x="84" y="94" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#64748B">B</text>
+
+    <text x="84" y="128" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="12" font-weight="700" fill="#0F172A">Bisnis Anda</text>
+    <text x="84" y="142" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="9" fill="#64748B">WhatsApp Business</text>
+
+    <g transform="translate(122 116)">
+      <circle cx="8" cy="8" r="8" fill="#1D74AD"/>
+      <path d="M5.2 8.2 L7.2 10.2 L11.2 6.2" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <rect x="20" y="154" width="108" height="22" rx="6" fill="#F1F5F9"/>
+    <text x="74" y="168" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="8" font-weight="600" fill="#1D74AD">Akun bisnis terverifikasi</text>
+
+    <rect x="16" y="186" width="92" height="28" rx="10" fill="#DCF8C6"/>
+    <rect x="20" y="194" width="60" height="5" rx="2.5" fill="#86EFAC" fill-opacity="0.6"/>
+    <rect x="20" y="204" width="44" height="5" rx="2.5" fill="#86EFAC" fill-opacity="0.4"/>
+
+    <rect x="56" y="224" width="100" height="34" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <rect x="66" y="234" width="64" height="5" rx="2.5" fill="#CBD5E1"/>
+    <rect x="66" y="244" width="48" height="5" rx="2.5" fill="#E2E8F0"/>
+
+    <rect x="16" y="268" width="76" height="24" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+    <text x="54" y="283" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="7" font-weight="600" fill="#1D74AD">Balasan otomatis</text>
+  </g>
+
+  <g transform="translate(218 40)">
+    <rect x="0" y="0" width="156" height="200" rx="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <rect x="0" y="0" width="156" height="36" rx="14" fill="#1D74AD" fill-opacity="0.08"/>
+    <text x="16" y="22" font-family="system-ui, Segoe UI, sans-serif" font-size="10" font-weight="700" fill="#0F172A">Dashboard tim</text>
+
+    <circle cx="28" cy="58" r="10" fill="#DBEAFE"/>
+    <circle cx="28" cy="88" r="10" fill="#DBEAFE"/>
+    <circle cx="28" cy="118" r="10" fill="#DBEAFE"/>
+    <rect x="46" y="52" width="72" height="5" rx="2.5" fill="#CBD5E1"/>
+    <rect x="46" y="62" width="48" height="4" rx="2" fill="#E2E8F0"/>
+    <rect x="46" y="82" width="80" height="5" rx="2.5" fill="#CBD5E1"/>
+    <rect x="46" y="92" width="56" height="4" rx="2" fill="#E2E8F0"/>
+    <rect x="46" y="112" width="64" height="5" rx="2.5" fill="#CBD5E1"/>
+    <rect x="46" y="122" width="40" height="4" rx="2" fill="#E2E8F0"/>
+
+    <rect x="12" y="144" width="132" height="44" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="20" y="162" font-family="system-ui, Segoe UI, sans-serif" font-size="8" font-weight="600" fill="#1D74AD">CRM terintegrasi</text>
+    <text x="20" y="176" font-family="system-ui, Segoe UI, sans-serif" font-size="7" fill="#64748B">Riwayat chat tersimpan rapi</text>
+  </g>
+
+  <g transform="translate(218 260)">
+    <rect x="0" y="0" width="72" height="32" rx="16" fill="#1D74AD"/>
+    <text x="36" y="20" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="8" font-weight="700" fill="#FFFFFF">Automasi</text>
+  </g>
+  <g transform="translate(302 260)">
+    <rect x="0" y="0" width="72" height="32" rx="16" fill="#FFFFFF" stroke="#1D74AD" stroke-width="1.5"/>
+    <text x="36" y="20" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="8" font-weight="700" fill="#1D74AD">Multi tim</text>
+  </g>
+
+  <g transform="translate(36 368)">
+    <rect x="0" y="0" width="338" height="52" rx="12" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.5"/>
+    <circle cx="26" cy="26" r="12" fill="#DBEAFE"/>
+    <path d="M22 26 L25 29 L30 22" stroke="#1D74AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="48" y="22" font-family="system-ui, Segoe UI, sans-serif" font-size="10" font-weight="700" fill="#0F172A">Satu brand, banyak tim</text>
+    <text x="48" y="36" font-family="system-ui, Segoe UI, sans-serif" font-size="8" fill="#64748B">Chat resmi tidak bergantung pada satu nomor pribadi</text>
+  </g>
+</svg>

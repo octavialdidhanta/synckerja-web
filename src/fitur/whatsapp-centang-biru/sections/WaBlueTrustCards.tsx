@@ -3,18 +3,18 @@ import { trackWaBlueCta } from "../analytics";
 
 const cards = [
   {
-    title: "Otoritas yang terbaca dalam detik",
-    body: "Centang biru mempercepat jawaban pertanyaan mendasar: “Ini benar perusahaannya?” Tanpa tanda itu, pelanggan sering menunda atau memindahkan ke channel lain.",
+    title: "Pelanggan langsung percaya profil Anda",
+    body: "Centang biru menjawab keraguan utama: apakah ini benar perusahaannya? Tanpa tanda itu, banyak pelanggan ragu balas atau mengabaikan chat Anda.",
     icon: BadgeCheck,
   },
   {
-    title: "Kampanye terasa seperti komunikasi resmi",
-    body: "Pesan promosi dari entitas terverifikasi cenderung dibaca sebagai informasi bisnis, bukan gangguan nomor tidak dikenal—mengurangi gesekan psikologis di awal percakapan.",
+    title: "Promosi terasa seperti pesan resmi",
+    body: "Pesan dari akun terverifikasi lebih mudah dibaca sebagai info bisnis, bukan spam dari nomor asing, jadi pelanggan tidak langsung menutup chat.",
     icon: LineChart,
   },
   {
-    title: "Tekanan reputasi turun, ritme tim naik",
-    body: "Profil rapi + status verifikasi menurunkan curiga spam. Tim CS dan sales menghabiskan energi untuk menjual dan menyelesaikan tiket, bukan membuktikan legitimasi berulang kali.",
+    title: "Tim fokus jualan, bukan buktiin diri",
+    body: "Profil rapi dan akun terverifikasi bikin pelanggan lebih percaya, jadi tim CS dan sales bisa fokus melayani dan closing, bukan bolak-balik meyakinkan customer bahwa ini bukan penipuan.",
     icon: ShieldAlert,
   },
 ];
@@ -25,11 +25,11 @@ const WaBlueTrustCards = () => {
       <div className="container mx-auto px-4">
         <div className="mx-auto mb-8 max-w-3xl text-center md:mb-12">
           <h2 className="text-2xl font-extrabold text-foreground md:text-3xl">
-            Bangun bisnis yang terasa “ada bendara” di WhatsApp
+            Bikin WhatsApp bisnis terasa resmi, bukan nomor sembarangan
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Synckerja Office memosisikan WhatsApp sebagai saluran premium: identitas jelas, alur verifikasi terdokumentasi,
-            dan pengalaman pelanggan yang konsisten dari pesan pertama hingga penyelesaian masalah.
+            Synckerja Office bantu pelanggan langsung percaya sejak chat pertama. Profil rapi, identitas terverifikasi,
+            dan pengalaman yang konsisten sampai masalah selesai.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-6">

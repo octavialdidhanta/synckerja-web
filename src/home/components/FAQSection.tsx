@@ -24,23 +24,28 @@ const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-16 lg:py-24 bg-muted">
-      <div className="container mx-auto px-4 max-w-3xl">
-        <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-10">
-          Pertanyaan yang sering ditanyakan business owner
-        </h2>
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
+    <section className="bg-muted py-14 lg:py-20">
+      <div className="container mx-auto w-full px-4">
+        <div className="mb-8 max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary">FAQ</p>
+          <h2 className="mt-2 text-xl font-bold text-foreground md:text-2xl">
+            Pertanyaan yang sering ditanyakan business owner
+          </h2>
+        </div>
+        <div className="w-full overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm">
           {faqs.map((faq, i) => (
-            <div key={i} className="border-b border-border last:border-b-0">
+            <div key={i} className="border-b border-border/50 last:border-b-0">
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex items-center justify-between px-6 py-5 text-left"
+                className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left sm:px-6 md:px-8"
               >
                 <span className="font-semibold text-foreground">{faq.q}</span>
-                <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${openIndex === i ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform ${openIndex === i ? "rotate-180" : ""}`}
+                />
               </button>
               {openIndex === i && (
-                <div className="px-6 pb-5 text-sm text-muted-foreground leading-relaxed">
+                <div className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground sm:px-6 md:px-8">
                   {faq.a}
                 </div>
               )}

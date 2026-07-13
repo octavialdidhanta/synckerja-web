@@ -160,6 +160,10 @@ export default function OrganizationsTable() {
         setSheetOpen(open);
         if (!open) setEditRow(null);
       }}
+      onOrganizationDeleted={() => {
+        setSheetOpen(false);
+        setEditRow(null);
+      }}
     />
     </>
   );

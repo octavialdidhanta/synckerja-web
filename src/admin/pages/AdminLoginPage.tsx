@@ -68,7 +68,7 @@ export default function AdminLoginPage() {
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" className="w-full" disabled={submitting || loading}>
-              {submitting ? "Memproses..." : "Login"}
+              {submitting ? "Menghubungi server..." : "Login"}
             </Button>
           </form>
         </CardContent>

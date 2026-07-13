@@ -8,34 +8,34 @@ import { gtmPush } from "@/share/analytics/gtm";
 
 export const FITUR_WA_BLUE_PATH = "/fitur/whatsapp-centang-biru";
 
-/** Ringkasan isi halaman `/fitur/whatsapp-centang-biru` yang sudah ada (bukan halaman/produk terpisah). */
+/** Ringkasan section di `/fitur/whatsapp-centang-biru` — selaras urutan & copy halaman. */
 const pageHighlights: { id: string; title: string; description: string; icon: LucideIcon }[] = [
   {
-    id: "trust_hook",
-    title: "Kepercayaan di awal percakapan",
+    id: "verifikasi",
+    title: "Pendampingan verifikasi centang biru",
     description:
-      "Menjawab keraguan identitas: pelanggan melihat bisnis sebagai entitas resmi, bukan nomor asing yang sulit dipercaya.",
+      "Mulai dari profil WhatsApp Business sampai pengajuan ke Meta. Bantu bisnis tampil sebagai entitas resmi, bukan nomor asing.",
     icon: BadgeCheck,
   },
   {
-    id: "signal",
-    title: "Sinyal dampak yang terukur",
+    id: "kepercayaan",
+    title: "WhatsApp bisnis yang terasa resmi",
     description:
-      "Menyoroti bagaimana profil resmi mengubah ritme balasan dan mengurangi gesekan “membuktikan diri” berulang kali.",
-    icon: LineChart,
-  },
-  {
-    id: "benefits",
-    title: "Manfaat operasional & reputasi",
-    description:
-      "Tiga fokus utama di halaman: otoritas instan, komunikasi promosi yang terasa resmi, dan tekanan reputasi yang lebih terkendali.",
+      "Pelanggan percaya sejak chat pertama: profil terverifikasi, promosi terasa resmi, dan tim fokus jualan bukan buktiin diri.",
     icon: ShieldCheck,
   },
   {
-    id: "faq_next",
-    title: "FAQ & langkah lanjutan",
+    id: "operasional",
+    title: "Operasional rapi setelah verifikasi",
     description:
-      "Pertanyaan umum seputar verifikasi dan posisi Synckerja Office sebagai pendamping proses—semua dalam satu halaman ini.",
+      "Automasi layanan, tim multiagen, dan CRM terintegrasi supaya kepercayaan pelanggan berlanjut jadi layanan yang konsisten.",
+    icon: LineChart,
+  },
+  {
+    id: "faq",
+    title: "FAQ verifikasi centang biru",
+    description:
+      "Jawaban seputar definisi centang biru, proses pengajuan, durasi, dan peran Synckerja Office dari awal sampai persetujuan Meta.",
     icon: HelpCircle,
   },
 ];
@@ -257,8 +257,8 @@ export function FiturMegaMenuMobile({ onNavigate }: FiturMegaMenuMobileProps) {
     <div className="space-y-3 border-l-4 border-primary pl-3">
       <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{SIDEBAR_LABEL}</p>
       <p className="text-sm text-muted-foreground">
-        Halaman ini membahas verifikasi centang biru WhatsApp, bukti dampak, manfaat utama, hingga FAQ—semua dalam satu
-        URL.
+        Halaman verifikasi centang biru WhatsApp: pendampingan ke Meta, manfaat kepercayaan pelanggan, operasional tim,
+        cerita mitra, hingga FAQ lengkap.
       </p>
       <ul className="space-y-1">
         {pageHighlights.map((item) => (

@@ -107,3 +107,46 @@ export type UpdateOrganizationSalesModulesResult = {
   before_state: { modules: Record<SalesModuleKey, boolean> };
   after_state: { modules: Record<SalesModuleKey, boolean> };
 };
+
+export const ORGANIZATION_DELETE_CONFIRM_PHRASE = "hapus organisasi ini" as const;
+
+export type OrganizationDeletionPreview = {
+  organization_id: string;
+  company_name: string;
+  email: string | null;
+  created_at: string;
+  subscription_status: string | null;
+  is_trial: boolean;
+  has_active_subscription: boolean;
+  member_count: number;
+  user_count: number;
+  auth_users_to_delete: number;
+  table_counts: Record<string, number>;
+  has_cms_admin_member: boolean;
+  confirm_phrase: typeof ORGANIZATION_DELETE_CONFIRM_PHRASE;
+};
+
+export type DeleteOrganizationInput = {
+  organization_id: string;
+  confirm_name: string;
+  confirm_phrase: string;
+  reason: string;
+};
+
+export type DeleteOrganizationResult = {
+  audit_id: string;
+  organization_id: string;
+  company_name: string;
+  deleted_counts: Record<string, number>;
+  auth_users_to_delete: string[];
+  deleted_auth_users: number;
+  deleted_storage_objects: number;
+  storage_prefix: string;
+};
+
+export type VerifyOrganizationDeletedResult = {
+  organization_id: string;
+  organization_exists: boolean;
+  is_clean: boolean;
+  remaining_counts: Record<string, number>;
+};

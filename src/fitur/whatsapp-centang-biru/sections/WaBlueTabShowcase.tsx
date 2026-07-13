@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { BadgeCheck, Check } from "lucide-react";
+import { Check, MessageCircle } from "lucide-react";
+import waBlueTabHero from "../assets/wa-blue-tab-hero.svg";
 import { trackWaBlueCta, trackWaBlueTab } from "../analytics";
 
 type TabId = "automation" | "multi_agent" | "crm";
@@ -10,36 +11,36 @@ const tabs: { id: TabId; label: string }[] = [
   { id: "crm", label: "CRM terintegrasi" },
 ];
 
-const tabContent: Record<
-  TabId,
-  { title: string; bullets: string[]; kicker: string }
-> = {
+const tabContent: Record<TabId, { title: string; bullets: string[]; kicker: string; note: string }> = {
   automation: {
     kicker: "Di luar centang biru, kecepatan tetap dirasakan pelanggan",
     title: "Automasi layanan pelanggan",
     bullets: [
-      "Routing pertanyaan berulang ke jawaban terstandar agen tetap fokus pada kasus bernilai tinggi.",
-      "Template balasan diselaraskan dengan identitas terverifikasi sehingga nada komunikasi konsisten.",
-      "Integrasi channel membantu tim menjaga SLA tanpa bolak-balik bukti identitas manual.",
+      "Pertanyaan berulang dijawab otomatis, tim fokus ke kasus yang lebih penting.",
+      "Template balasan selaras dengan profil resmi, jadi nada chat tetap konsisten.",
+      "Tim balas lebih cepat tanpa bolak-balik kirim bukti identitas manual.",
     ],
+    note: "Identitas terverifikasi, tim kerja yang rapi, dan riwayat chat pelanggan tetap aman di satu tempat, bukan berpindah ke nomor pribadi siapa pun.",
   },
   multi_agent: {
     kicker: "Kepercayaan pelanggan tidak boleh bergantung pada satu nomor pribadi",
     title: "Operasional multiagen yang tetap terasa satu brand",
     bullets: [
-      "Hak akses per peran mencegah “nomor bos” menjadi bottleneck komunikasi resmi.",
-      "Supervisi percakapan memastikan tone of voice selaras dengan positioning premium.",
+      "Setiap tim punya akses sesuai peran, chat resmi tidak bergantung pada satu nomor pribadi.",
+      "Supervisi percakapan menjaga nada chat tetap selaras dengan brand Anda.",
       "Eskalasi antar shift tidak merusak kredibilitas karena konteks pelanggan tersimpan rapi.",
     ],
+    note: "Banyak tim, satu identitas resmi. Pelanggan selalu merasa bicara dengan bisnis yang sama.",
   },
   crm: {
-    kicker: "Verifikasi percuma jika data pelanggan berantakan",
-    title: "CRM terintegrasi untuk menutup loop kepercayaan",
+    kicker: "Riwayat chat tersimpan, follow-up jadi lebih personal",
+    title: "CRM terintegrasi dengan WhatsApp",
     bullets: [
-      "Riwayat interaksi WhatsApp terhubung ke profil pelanggan agar follow-up tidak terasa asing.",
-      "Status verifikasi dan metadata bisnis tercermin di dashboard tim penjualan.",
-      "Insight sederhana membantu Anda melihat percakapan mana yang butuh sentuhan manusia lebih cepat.",
+      "Semua chat WhatsApp tersimpan di profil pelanggan, tim tidak perlu tanya ulang dari awal.",
+      "Tim sales bisa lihat status verifikasi dan info bisnis langsung di dashboard.",
+      "Tahu chat mana yang perlu ditangani manusia lebih dulu.",
     ],
+    note: "Data pelanggan rapi di satu tempat, follow-up terasa personal dan tidak mengulang dari nol.",
   },
 };
 
@@ -48,55 +49,52 @@ const WaBlueTabShowcase = () => {
   const content = tabContent[active];
 
   return (
-    <section className="bg-primary py-14 text-primary-foreground md:py-20">
+    <section className="border-t border-border bg-background py-16 md:py-20">
       <div className="container mx-auto px-4">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start lg:gap-12">
-          <div>
-            <h2 className="text-2xl font-extrabold leading-snug md:text-3xl">
-              Lebih dari centang biru: fondasi pengalaman pelanggan yang profesional
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-primary-foreground/85 md:text-base">
-              Centang biru menjawab keraguan identitas. Synckerja Office melengkapinya dengan operasional yang rapi—agar
-              kepercayaan awal berlanjut menjadi ritme layanan yang bisa diukur, bukan sekadar “tampilan meyakinkan”.
-            </p>
-            <nav className="mt-8 space-y-2" aria-label="Ringkasan kemampuan">
-              {tabs.map((t) => {
-                const isActive = t.id === active;
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => {
-                      setActive(t.id);
-                      trackWaBlueTab(t.id);
-                    }}
-                    className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-colors md:text-base ${
-                      isActive ? "bg-primary-foreground/10" : "hover:bg-primary-foreground/5"
-                    }`}
-                  >
-                    <span
-                      className={`size-2 rounded-full ${isActive ? "bg-[#FFC107]" : "bg-primary-foreground/25"}`}
-                      aria-hidden
-                    />
-                    <span>{t.label}</span>
-                  </button>
-                );
-              })}
-            </nav>
-            <a
-              href="#"
-              onClick={() => trackWaBlueCta("whatsapp_sales", "wa_blue_tab_sidebar")}
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-background px-4 py-3 text-sm font-semibold text-primary shadow-sm transition-opacity hover:opacity-95 lg:w-auto"
-            >
-              <span aria-hidden>💬</span>
-              WhatsApp sales
-            </a>
-          </div>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Di luar centang biru</p>
+          <h2 className="mt-3 text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
+            Lebih dari sekedar centang biru, layanan yang benar-benar rapi
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+            Centang biru bikin pelanggan percaya. Synckerja Office melengkapi dengan operasional yang rapi supaya kepercayaan
+            itu berlanjut jadi layanan yang konsisten, bukan cuma tampilan meyakinkan.
+          </p>
+        </div>
 
-          <div className="rounded-3xl bg-background p-6 text-foreground shadow-xl md:p-8">
+        <div className="mt-10 flex flex-wrap justify-center gap-2 border-b border-border pb-px" role="tablist" aria-label="Kemampuan Synckerja Office">
+          {tabs.map((t) => {
+            const isActive = t.id === active;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => {
+                  setActive(t.id);
+                  trackWaBlueTab(t.id);
+                }}
+                className={`rounded-t-lg px-4 py-3 text-sm font-semibold transition-colors md:text-base ${
+                  isActive
+                    ? "border-b-2 border-primary bg-secondary/40 text-foreground"
+                    : "text-muted-foreground hover:bg-secondary/20 hover:text-foreground"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div
+          className="grid gap-10 border-b border-border pt-4 pb-10 md:pt-5 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)] lg:items-center lg:gap-8"
+          role="tabpanel"
+        >
+          <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{content.kicker}</p>
-            <h3 className="mt-2 text-xl font-extrabold md:text-2xl">{content.title}</h3>
-            <ul className="mt-6 space-y-3">
+            <h3 className="mt-2 text-xl font-extrabold text-foreground md:text-2xl">{content.title}</h3>
+            <ul className="mt-6 space-y-4">
               {content.bullets.map((line) => (
                 <li key={line} className="flex gap-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                   <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -106,35 +104,31 @@ const WaBlueTabShowcase = () => {
                 </li>
               ))}
             </ul>
+            <p className="mt-8 max-w-xl text-sm leading-relaxed text-muted-foreground">{content.note}</p>
+            <a
+              href="#"
+              onClick={() => trackWaBlueCta("hubungi_sales", "wa_blue_tab_showcase")}
+              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
+            >
+              <MessageCircle className="size-5" strokeWidth={2} aria-hidden />
+              hubungi Sales
+            </a>
+          </div>
 
-            <div className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:items-center">
-              <div className="rounded-2xl bg-foreground p-4 text-background shadow-inner">
-                <div className="mx-auto max-w-[220px] rounded-[1.75rem] border border-background/15 bg-background/5 p-3">
-                  <div className="rounded-[1.35rem] bg-background px-4 py-5 text-foreground shadow-md">
-                    <div className="flex items-center gap-3">
-                      <div className="size-11 rounded-full bg-secondary" />
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-bold">Synckerja Office</p>
-                        <p className="text-xs text-muted-foreground">WhatsApp Business</p>
-                      </div>
-                      <BadgeCheck className="ml-auto size-6 shrink-0 text-primary" aria-label="Terverifikasi" />
-                    </div>
-                    <div className="mt-4 space-y-2">
-                      <div className="h-2 w-3/4 rounded-full bg-muted" />
-                      <div className="h-2 w-1/2 rounded-full bg-muted" />
-                    </div>
-                  </div>
-                </div>
-                <p className="mt-3 text-center text-xs text-background/70">Ilustrasi profil — bukan tangkapan layar pihak ketiga</p>
-              </div>
-              <div className="rounded-2xl border border-border bg-muted/40 p-5">
-                <p className="text-sm font-semibold text-foreground">Positioning singkat</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Synckerja Office memosisikan WhatsApp sebagai jalur resmi: identitas terverifikasi, alur kerja tim yang
-                  terlihat, dan data pelanggan yang tidak “berpindah dompet” antar nomor pribadi.
-                </p>
-              </div>
-            </div>
+          <div className="flex w-full flex-col gap-3 lg:border-l lg:border-border lg:pl-6">
+            <img
+              src={waBlueTabHero}
+              alt="Ilustrasi operasional WhatsApp Business Bisnis Anda dengan dashboard tim dan CRM terintegrasi"
+              width={400}
+              height={440}
+              sizes="(max-width: 1023px) 100vw, 420px"
+              loading="lazy"
+              decoding="async"
+              className="h-auto w-full"
+            />
+            <p className="text-center text-xs text-muted-foreground lg:text-left">
+              WhatsApp terverifikasi + operasional tim yang rapi
+            </p>
           </div>
         </div>
       </div>

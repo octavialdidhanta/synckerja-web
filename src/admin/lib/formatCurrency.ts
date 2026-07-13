@@ -45,3 +45,31 @@ export function validateTrialDays(value: number | null): string | null {
   }
   return null;
 }
+
+export function validateMaxMembers(value: number | null): string | null {
+  if (value === null || Number.isNaN(value)) return "Max member wajib diisi.";
+  if (!Number.isInteger(value) || value < 1 || value > 1000) {
+    return "Max member harus bilangan bulat antara 1 dan 1000.";
+  }
+  return null;
+}
+
+/** Plan berbayar per member — cap ditentukan jumlah member di office, bukan kolom max_members. */
+export function planUsesPerMemberPricing(basePrice: number | null): boolean {
+  return basePrice !== null && basePrice > 0;
+}
+
+/** Max member hanya untuk plan gratis (harga Rp 0). */
+export function maxMembersAppliesToPlan(basePrice: number | null): boolean {
+  return basePrice !== null && basePrice === 0;
+}
+
+/** Default cap untuk plan gratis / trial tanpa harga. */
+export function defaultMaxMembersForPlan(
+  basePrice: number | null,
+  trialDays: number | null,
+): number {
+  if (!maxMembersAppliesToPlan(basePrice)) return 1;
+  if (trialDays !== null && trialDays > 0) return 1;
+  return 1;
+}

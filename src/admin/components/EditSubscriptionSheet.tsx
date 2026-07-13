@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import DeleteOrganizationDialog from "@/admin/components/DeleteOrganizationDialog";
 import { useUpdateOrganizationSubscription } from "@/admin/hooks/useUpdateOrganizationSubscription";
 import { useUpdateOrganizationSettings } from "@/admin/hooks/useUpdateOrganizationSettings";
 import { useOrganizationModuleAdjustments } from "@/admin/hooks/useOrganizationModuleAdjustments";
@@ -50,6 +51,7 @@ type EditSubscriptionSheetProps = {
   row: AdminOrganizationRow | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOrganizationDeleted?: () => void;
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -73,7 +75,12 @@ function TenantTypeBadge({ selfServiceEnabled }: { selfServiceEnabled: boolean }
   );
 }
 
-export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditSubscriptionSheetProps) {
+export default function EditSubscriptionSheet({
+  row,
+  open,
+  onOpenChange,
+  onOrganizationDeleted,
+}: EditSubscriptionSheetProps) {
   const [isTrial, setIsTrial] = useState(false);
   const [trialDateInput, setTrialDateInput] = useState("");
   const [subscriptionDateInput, setSubscriptionDateInput] = useState("");
@@ -87,7 +94,10 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
     createDefaultSalesModulesRecord,
   );
   const [modulesReason, setModulesReason] = useState("");
-  const [activeTab, setActiveTab] = useState<"subscription" | "tenant" | "history">("subscription");
+  const [activeTab, setActiveTab] = useState<"subscription" | "tenant" | "history" | "danger">(
+    "subscription",
+  );
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const updateMutation = useUpdateOrganizationSubscription();
   const settingsMutation = useUpdateOrganizationSettings();
@@ -114,6 +124,7 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
     setModulesConfirmOpen(false);
     setModulesReason("");
     setActiveTab("subscription");
+    setDeleteDialogOpen(false);
   }, [row, open]);
 
   useEffect(() => {
@@ -256,14 +267,17 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
           <Tabs
             value={activeTab}
             onValueChange={(value) =>
-              setActiveTab(value as "subscription" | "tenant" | "history")
+              setActiveTab(value as "subscription" | "tenant" | "history" | "danger")
             }
             className="mt-6"
           >
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="subscription">Subscription</TabsTrigger>
               <TabsTrigger value="tenant">Tenant</TabsTrigger>
               <TabsTrigger value="history">Riwayat</TabsTrigger>
+              <TabsTrigger value="danger" className="text-destructive data-[state=active]:text-destructive">
+                Zona bahaya
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="subscription" className="mt-4 space-y-6">
@@ -533,6 +547,23 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
                 })}
               </div>
             </TabsContent>
+
+            <TabsContent value="danger" className="mt-4 space-y-4">
+              <div className="rounded-md border border-destructive/40 bg-destructive/5 p-4">
+                <p className="text-sm font-semibold text-destructive">Hapus organisasi</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Semua data <span className="font-medium text-foreground">{row.company_name}</span>{" "}
+                  dihapus permanen. Tidak bisa dibatalkan.
+                </p>
+                <Button
+                  variant="destructive"
+                  className="mt-4 w-full"
+                  onClick={() => setDeleteDialogOpen(true)}
+                >
+                  Hapus organisasi
+                </Button>
+              </div>
+            </TabsContent>
           </Tabs>
 
           <SheetFooter className="mt-6 gap-2 sm:gap-0">
@@ -642,6 +673,18 @@ export default function EditSubscriptionSheet({ row, open, onOpenChange }: EditS
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <DeleteOrganizationDialog
+        organizationId={row.organization_id}
+        companyName={row.company_name}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onDeleted={() => {
+          setDeleteDialogOpen(false);
+          onOpenChange(false);
+          onOrganizationDeleted?.();
+        }}
+      />
     </>
   );
 }

@@ -21,6 +21,15 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function toAuthErrorMessage(err: unknown): string {
+  const message = err instanceof Error ? err.message : "Login gagal";
+  const lower = message.toLowerCase();
+  if (lower.includes("failed to fetch") || lower.includes("network")) {
+    return "Server Supabase tidak merespons (timeout). Tunggu 1–2 menit lalu coba lagi.";
+  }
+  return message;
+}
+
 async function verifyCmsAdmin(): Promise<boolean> {
   const { data, error } = await supabase.rpc("is_cms_admin");
   if (error) return false;
@@ -72,15 +81,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [syncAdminStatus]);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw new Error(error.message);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw new Error(error.message);
 
-    const admin = await verifyCmsAdmin();
-    if (!admin) {
-      await supabase.auth.signOut();
-      throw new Error("Akses ditolak: bukan CMS admin");
+      const admin = await verifyCmsAdmin();
+      if (!admin) {
+        await supabase.auth.signOut();
+        throw new Error("Akses ditolak: bukan CMS admin");
+      }
+      setIsCmsAdmin(true);
+    } catch (err) {
+      throw new Error(toAuthErrorMessage(err));
     }
-    setIsCmsAdmin(true);
   }, []);
 
   const signOut = useCallback(async () => {
