@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const industries = [
   "F&B dan Retail",
@@ -85,40 +85,70 @@ const caseStudies: Record<
 
 const CaseStudiesSection = () => {
   const [active, setActive] = useState<Industry>("Manufaktur");
+  const tablistRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Partial<Record<Industry, HTMLButtonElement | null>>>({});
   const data = caseStudies[active];
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((current) => {
+        const index = industries.indexOf(current);
+        return industries[(index + 1) % industries.length];
+      });
+    }, 2000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const tablist = tablistRef.current;
+    const tab = tabRefs.current[active];
+    if (!tablist || !tab || !window.matchMedia("(max-width: 1023px)").matches) return;
+
+    const targetLeft = tab.offsetLeft - (tablist.clientWidth - tab.offsetWidth) / 2;
+
+    tablist.scrollTo({
+      left: Math.max(0, targetLeft),
+      behavior: "smooth",
+    });
+  }, [active]);
+
   return (
-    <section className="section-warm py-14 lg:py-20">
+    <section className="section-warm py-10 pb-8 lg:py-16 lg:pb-12">
       <div className="container mx-auto px-4">
-        <div className="mb-8 max-w-2xl">
+        <div className="mb-5 max-w-2xl md:mb-6">
           <p className="text-xs font-semibold uppercase tracking-wider text-primary">Testimoni klien</p>
-          <h2 className="mt-2 text-xl font-bold text-foreground md:text-2xl">
+          <h2 className="mt-1.5 text-xl font-bold text-foreground md:text-2xl">
             Cerita klien dari berbagai industri
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-1.5 text-sm text-muted-foreground">
             Payroll, absensi, dan onboarding yang lebih rapi di berbagai jenis bisnis.
           </p>
         </div>
 
-        <article className="w-full overflow-hidden rounded-2xl border border-border/50 bg-card shadow-sm">
+        <article className="w-full overflow-hidden rounded-xl border border-border/50 bg-card shadow-sm">
           <div className="grid items-stretch lg:grid-cols-12">
             <div
+              ref={tablistRef}
               role="tablist"
               aria-label="Industri klien"
-              className="scrollbar-hide flex gap-2 overflow-x-auto border-b border-border/50 bg-muted/30 px-4 py-4 lg:col-span-3 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:border-b-0 lg:border-r lg:px-3 lg:py-6"
+              className="scrollbar-hide flex gap-1.5 overflow-x-auto border-b border-primary/20 bg-primary px-3 py-2.5 lg:col-span-3 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:border-b-0 lg:border-r lg:border-border/50 lg:bg-muted/30 lg:px-3 lg:py-5"
             >
               {industries.map((ind) => {
                 const isActive = active === ind;
                 return (
                   <button
                     key={ind}
+                    ref={(el) => {
+                      tabRefs.current[ind] = el;
+                    }}
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => setActive(ind)}
-                    className={`shrink-0 rounded-lg px-3 py-2.5 text-left text-xs font-medium transition-all duration-200 md:text-sm lg:w-full ${
+                    className={`shrink-0 rounded-md px-2.5 py-2 text-left text-xs font-medium transition-all duration-200 md:text-sm lg:w-full lg:rounded-lg lg:px-3 lg:py-2.5 ${
                       isActive
-                        ? "bg-card text-primary shadow-sm ring-1 ring-border/60 lg:border-l-2 lg:border-l-primary lg:bg-primary/[0.06] lg:pl-2.5 lg:shadow-none lg:ring-0"
-                        : "text-muted-foreground hover:bg-card/60 hover:text-foreground lg:border-l-2 lg:border-l-transparent lg:pl-2.5"
+                        ? "bg-primary-foreground font-semibold text-primary shadow-sm lg:border-l-2 lg:border-l-primary lg:bg-primary/[0.06] lg:pl-2.5 lg:font-medium lg:text-primary lg:shadow-none"
+                        : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground lg:border-l-2 lg:border-l-transparent lg:bg-transparent lg:pl-2.5 lg:text-muted-foreground lg:hover:bg-card/60 lg:hover:text-foreground"
                     }`}
                   >
                     {ind}
@@ -131,31 +161,31 @@ const CaseStudiesSection = () => {
               key={active}
               className="animate-in fade-in grid duration-300 lg:col-span-9 lg:grid-cols-9"
             >
-              <div className="flex flex-col justify-center gap-6 border-b border-border/50 px-5 py-6 sm:px-6 lg:col-span-3 lg:border-b-0 lg:border-r lg:py-8">
+              <div className="flex flex-col justify-center gap-4 border-b border-border/50 px-4 py-4 sm:px-5 lg:col-span-3 lg:border-b-0 lg:border-r lg:py-6">
                 {data.stats.map(({ value, label }, i) => (
                   <div
                     key={label}
-                    className={i < data.stats.length - 1 ? "border-b border-border/40 pb-6" : ""}
+                    className={i < data.stats.length - 1 ? "border-b border-border/40 pb-4" : ""}
                   >
-                    <p className="text-2xl font-semibold tabular-nums text-primary md:text-3xl">{value}</p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground md:text-sm">{label}</p>
+                    <p className="text-xl font-semibold tabular-nums text-primary md:text-2xl lg:text-3xl">{value}</p>
+                    <p className="mt-1 text-xs leading-snug text-muted-foreground md:text-sm">{label}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="flex flex-col justify-center px-5 py-6 sm:px-6 lg:col-span-6 lg:px-8 lg:py-8">
-                <p className="mb-4 text-xs font-medium text-primary">{active}</p>
-                <blockquote className="text-sm leading-relaxed text-foreground/90 md:text-base lg:text-[1.05rem] lg:leading-7">
+              <div className="flex flex-col justify-center px-4 py-4 sm:px-5 lg:col-span-6 lg:px-6 lg:py-6">
+                <p className="mb-2 text-xs font-medium text-primary">{active}</p>
+                <blockquote className="text-sm leading-relaxed text-foreground/90 md:text-base lg:leading-7">
                   &ldquo;{data.quote}&rdquo;
                 </blockquote>
 
-                <footer className="mt-6 flex items-center gap-3 border-t border-border/40 pt-5">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                <footer className="mt-4 flex items-center gap-2.5 border-t border-border/40 pt-3.5">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                     {data.person.charAt(0)}
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">{data.person}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground md:text-sm">{data.company}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{data.company}</p>
                   </div>
                 </footer>
               </div>

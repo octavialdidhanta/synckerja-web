@@ -13,8 +13,11 @@ const WaBlueTestimonial = () => {
       <div className="container mx-auto px-4">
         <p className="text-sm font-semibold uppercase tracking-wide text-primary">Cerita mitra</p>
         <h2 className="mt-3 max-w-3xl text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
-          Dulu ragu karena nomor asing, sekarang chat lebih cepat jadi transaksi
+          Profil resmi mengurangi keraguan pelanggan
         </h2>
+        <p className="mt-3 max-w-2xl text-muted-foreground md:text-lg">
+          Percakapan lebih cepat sampai transaksi.
+        </p>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(260px,300px)_1fr] lg:items-stretch lg:gap-8">
           <div className="flex flex-col justify-between gap-6 rounded-2xl bg-primary p-6 text-primary-foreground shadow-md md:p-8">

@@ -61,8 +61,14 @@ const WaBlueTabShowcase = () => {
             itu berlanjut jadi layanan yang konsisten, bukan cuma tampilan meyakinkan.
           </p>
         </div>
+      </div>
 
-        <div className="mt-10 flex flex-wrap justify-center gap-2 border-b border-border pb-px" role="tablist" aria-label="Kemampuan Synckerja Office">
+      <div className="mt-10 w-full border-b border-border md:container md:mx-auto md:px-4">
+        <div
+          className="flex snap-x snap-mandatory flex-nowrap gap-0 overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] md:snap-none md:flex-wrap md:justify-center md:gap-2 md:overflow-visible [&::-webkit-scrollbar]:hidden"
+          role="tablist"
+          aria-label="Kemampuan Synckerja Office"
+        >
           {tabs.map((t) => {
             const isActive = t.id === active;
             return (
@@ -75,7 +81,7 @@ const WaBlueTabShowcase = () => {
                   setActive(t.id);
                   trackWaBlueTab(t.id);
                 }}
-                className={`rounded-t-lg px-4 py-3 text-sm font-semibold transition-colors md:text-base ${
+                className={`shrink-0 snap-start whitespace-nowrap px-4 py-3 text-sm font-semibold transition-colors md:snap-align-none md:rounded-t-lg md:text-base ${
                   isActive
                     ? "border-b-2 border-primary bg-secondary/40 text-foreground"
                     : "text-muted-foreground hover:bg-secondary/20 hover:text-foreground"
@@ -86,14 +92,16 @@ const WaBlueTabShowcase = () => {
             );
           })}
         </div>
+      </div>
 
+      <div className="container mx-auto px-4">
         <div
           className="grid gap-10 border-b border-border pt-4 pb-10 md:pt-5 lg:grid-cols-[minmax(0,1fr)_minmax(360px,440px)] lg:items-center lg:gap-8"
           role="tabpanel"
         >
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{content.kicker}</p>
-            <h3 className="mt-2 text-xl font-extrabold text-foreground md:text-2xl">{content.title}</h3>
+            <h3 className="text-xl font-extrabold text-foreground md:text-2xl">{content.title}</h3>
+            <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{content.kicker}</p>
             <ul className="mt-6 space-y-4">
               {content.bullets.map((line) => (
                 <li key={line} className="flex gap-3 text-sm leading-relaxed text-muted-foreground md:text-base">

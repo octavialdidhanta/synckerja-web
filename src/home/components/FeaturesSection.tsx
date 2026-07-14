@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
 import {
   Carousel,
@@ -5,6 +6,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/share/ui/carousel";
 import { FeatureIllustration, type FeatureIllustrationId } from "./FeatureCardIllustrations";
 
@@ -71,10 +73,40 @@ const features: {
 ];
 
 const FeaturesSection = () => {
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    const stopAutoplay = () => {
+      if (timer) clearInterval(timer);
+      timer = undefined;
+    };
+
+    const startAutoplay = () => {
+      stopAutoplay();
+      if (!mobileQuery.matches) return;
+      timer = setInterval(() => {
+        carouselApi.scrollNext();
+      }, 2000);
+    };
+
+    startAutoplay();
+    mobileQuery.addEventListener("change", startAutoplay);
+
+    return () => {
+      mobileQuery.removeEventListener("change", startAutoplay);
+      stopAutoplay();
+    };
+  }, [carouselApi]);
+
   return (
-    <section className="bg-background py-16 lg:py-24">
+    <section className="bg-background pt-12 pb-6 md:pt-16 lg:pt-24 lg:pb-12">
       <div className="container mx-auto px-4">
-        <div className="mx-auto mb-12 max-w-3xl text-left md:text-center">
+        <div className="mx-auto mb-8 max-w-3xl text-left md:mb-10 md:text-center">
           <h2 className="mb-4 text-2xl font-extrabold text-foreground md:text-3xl lg:text-4xl">
             Visibilitas dan kontrol bisnis untuk Business Owner
           </h2>
@@ -84,41 +116,47 @@ const FeaturesSection = () => {
             detail operasional harian.
           </p>
         </div>
-
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full"
-        >
-          <div className="relative px-10 sm:px-12">
-            <CarouselContent>
-              {features.map((f) => (
-                <CarouselItem key={f.title} className="basis-[88%] sm:basis-[420px] md:basis-1/2 lg:basis-1/3">
-                  <div className="h-full rounded-xl border border-primary/20 bg-card p-6 transition-shadow hover:shadow-lg">
-                    <div className="mb-5 h-32 w-full overflow-hidden rounded-lg">
-                      <FeatureIllustration id={f.id} className="h-full w-full" />
-                    </div>
-                    <h3 className="mb-2 text-lg font-semibold text-foreground">{f.title}</h3>
-                    <p className="mb-4 text-sm text-muted-foreground">{f.desc}</p>
-                    <ul className="space-y-2">
-                      {f.items.map((item) => (
-                        <li key={item} className="flex items-center gap-2 text-sm text-foreground">
-                          <CheckCircle className="h-4 w-4 shrink-0 text-primary" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-0 border-primary/20 bg-background shadow-sm hover:bg-muted" />
-            <CarouselNext className="right-0 border-primary/20 bg-background shadow-sm hover:bg-muted" />
-          </div>
-        </Carousel>
       </div>
+
+      <Carousel
+        setApi={setCarouselApi}
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+        className="w-full md:container md:mx-auto md:px-4"
+      >
+        <div>
+          <CarouselContent className="ml-0 md:-ml-4">
+            {features.map((f) => (
+              <CarouselItem
+                key={f.title}
+                className="basis-[88%] pl-2 first:pl-3 last:pr-3 sm:basis-[400px] md:basis-1/2 md:pl-3 lg:basis-1/3"
+              >
+                <div className="h-full rounded-xl border border-primary/20 bg-card p-4 transition-shadow hover:shadow-lg md:p-5">
+                  <div className="mb-3 h-28 w-full overflow-hidden rounded-lg md:mb-4 md:h-32">
+                    <FeatureIllustration id={f.id} className="h-full w-full" />
+                  </div>
+                  <h3 className="mb-1.5 text-lg font-semibold text-foreground">{f.title}</h3>
+                  <p className="mb-3 text-sm text-muted-foreground">{f.desc}</p>
+                  <ul className="space-y-1.5">
+                    {f.items.map((item) => (
+                      <li key={item} className="flex items-center gap-2 text-sm text-foreground">
+                        <CheckCircle className="h-4 w-4 shrink-0 text-primary" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="mt-2 flex items-center justify-center gap-2 px-3">
+            <CarouselPrevious className="static left-auto top-auto h-8 w-8 translate-x-0 translate-y-0 rounded-full border-primary/20 bg-background shadow-sm hover:bg-muted" />
+            <CarouselNext className="static right-auto top-auto h-8 w-8 translate-x-0 translate-y-0 rounded-full border-primary/20 bg-background shadow-sm hover:bg-muted" />
+          </div>
+        </div>
+      </Carousel>
     </section>
   );
 };

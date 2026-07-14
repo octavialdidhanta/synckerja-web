@@ -10,6 +10,8 @@ import AdminPricingPage from "./admin/pages/AdminPricingPage.tsx";
 import WhatsappCentangBiruPage from "./fitur/whatsapp-centang-biru/WhatsappCentangBiruPage.tsx";
 import Index from "./home/pages/Index.tsx";
 import NotFound from "./home/pages/NotFound.tsx";
+import PrivacyPolicyPage from "./policy/pages/PrivacyPolicyPage.tsx";
+import TermsOfServicePage from "./policy/pages/TermsOfServicePage.tsx";
 import GtmPageView from "./share/analytics/GtmPageView.tsx";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/fitur/whatsapp-centang-biru" element={<WhatsappCentangBiruPage />} />
+        <Route path="/policy/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/policy/terms" element={<TermsOfServicePage />} />
         <Route path="/admin" element={<AdminIndexPage />} />
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route
