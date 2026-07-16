@@ -9,6 +9,145 @@ Template entry baru: [`TEMPLATE-synckerja-web.md`](./TEMPLATE-synckerja-web.md)
 
 ---
 
+## [2026-07-22] Billing term discounts (1/3/6/12 bulan)
+
+**Author:** synckerja-web (CMS admin)  
+**Status apply Supabase:** Partial apply (schema + helpers); RPC admin perlu apply lengkap
+
+### Ringkasan
+
+Menambah `billing_term_discounts` jsonb per plan, `billing_term_months` pada payments/org subscriptions. CMS mengganti diskon tahunan tunggal dengan 4 field diskon per term. Office: segmented billing 1/3/6/12 bulan pada Scale Up + Enterprise.
+
+### File migration
+
+| File | Jenis |
+|------|-------|
+| `supabase/migrations/20260722120000_plan_billing_term_discounts.sql` | schema + RPC admin |
+
+---
+
+## [2026-07-21] Customer Support — plan-card toggle
+
+**Author:** synckerja-web (CMS admin)  
+**Status apply Supabase:** Sudah apply (MCP migration)
+
+### Ringkasan
+
+Menambah toggle **Customer Support** (`customerSupport`) di `subscription_plan_module_access` untuk plan mandiri. Label di kartu Office otomatis: **Limited Support** (harga Rp 0), **Standard Support** (berbayar), **24/7 support** (Enterprise). Key tidak masuk regenerate `features` jsonb.
+
+### File migration
+
+| File | Jenis |
+|------|-------|
+| `supabase/migrations/20260721120000_plan_customer_support_toggle.sql` | catalog key + seed ON + skip di `_build_plan_features_from_modules` |
+
+### Verifikasi
+
+```sql
+SELECT sp.name, pma.is_enabled
+FROM subscription_plan_module_access pma
+JOIN subscription_plans sp ON sp.id = pma.subscription_plan_id
+WHERE pma.module_key = 'customerSupport';
+```
+
+### Office parity
+
+Salin migration ke `synckerja/supabase/migrations/`. Update `moduleCatalog.ts`, `planCustomerSupport.ts`, `PlanCard.tsx`, i18n.
+
+---
+
+## [2026-07-17] Scale Up — sync modul mandiri dari Start Up
+
+**Author:** synckerja-web (CMS admin)  
+**Status apply Supabase:** Sudah apply (manual SQL Editor)
+
+### Ringkasan
+
+Menyamakan toggle modul mandiri plan **Scale Up** dengan plan **Start Up / Trial / Starter** di `subscription_plan_module_access`, agar kartu `/subscription/plans` di Office menampilkan check/X modul yang sama (display = entitlement).
+
+### File migration
+
+| File | Jenis |
+|------|-------|
+| `supabase/migrations/20260717150000_scale_up_sync_modules_from_startup.sql` | UPDATE `is_enabled` Scale Up dari source plan |
+
+### Verifikasi
+
+```sql
+SELECT sp.name, m.module_key, m.is_enabled
+FROM subscription_plan_module_access m
+JOIN subscription_plans sp ON sp.id = m.subscription_plan_id
+WHERE lower(trim(sp.name)) ~ '(start|scale)'
+ORDER BY sp.name, m.module_key;
+```
+
+---
+
+## [2026-07-17] Add-on catalog — Lead Magnet
+
+**Author:** synckerja-web (CMS admin)  
+**Status apply Supabase:** Sudah apply (manual SQL Editor, 2026-07-17)
+
+### Ringkasan
+
+Menambah add-on berbayar **Lead Magnet** (`code: lead_magnet`) ke catalog `subscription_add_ons` dengan harga default **Rp 99.000 / bulan** flat per organisasi (`billing_unit: per_organization_month`). Junction `subscription_plan_add_ons` mengikuti eligibility plan yang sama dengan Omnichannel (paid plans, exclude trial/starter/business).
+
+**Kebijakan komersial:** Lead Magnet terpisah dari modul Digital Marketing — tenant mandiri beli via Midtrans (bundled checkout + standalone); tenant sales diaktifkan via CMS toggle modul `leadMagnet` (migration terpisah di office).
+
+### File migration
+
+| File | Jenis |
+|------|-------|
+| `supabase/migrations/20260717120000_lead_magnet_addon_catalog.sql` | INSERT catalog + plan junction |
+| `supabase/migrations/20260717140000_lead_magnet_sales_module_catalog.sql` | Modul `leadMagnet` di sales tenant CMS |
+
+### Objek database
+
+**Baris baru `subscription_add_ons`**
+- `code = 'lead_magnet'`
+- `default_unit_price_per_month = 99000`
+- `billing_unit = 'per_organization_month'`
+- `follows_plan_annual_discount = true`
+
+**Baris baru `subscription_plan_add_ons`**
+- Satu baris per paid HR plan eligible (mirror omnichannel_roster rules)
+
+### Dampak ke synckerja (office)
+
+1. **Copy** migration `20260717120000_lead_magnet_addon_catalog.sql` ke `supabase/migrations/` office.
+2. Apply migration entitlement office: `20260717130000_lead_magnet_entitlement.sql` (kolom `lead_magnet_active`, grace, payment idempotency, RPC pricing).
+3. Apply migration sales catalog: `20260717140000_lead_magnet_sales_module_catalog.sql` (modul `leadMagnet` untuk tenant sales).
+4. Implement billing Midtrans, gating UI, dan edge enforcement (lihat plan office).
+
+### Yang harus dilakukan tim synckerja
+
+1. Copy 3 migration files ke repo office (catalog + entitlement + sales catalog).
+2. Deploy edge functions `lead-magnet-api`, `lead-magnet-runtime`, `instagram-webhook` setelah update entitlement check.
+3. Verifikasi halaman `/digital-marketing/lead-magnet` — upsell add-on jika belum beli; grace 14 hari untuk org dengan campaign active/paused.
+
+### Verifikasi SQL
+
+```sql
+SELECT code, default_unit_price_per_month, billing_unit, is_active
+FROM subscription_add_ons WHERE code = 'lead_magnet';
+
+SELECT sp.name, sa.code, pao.display_order
+FROM subscription_plan_add_ons pao
+JOIN subscription_plans sp ON sp.id = pao.subscription_plan_id
+JOIN subscription_add_ons sa ON sa.id = pao.add_on_id
+WHERE sa.code = 'lead_magnet'
+ORDER BY sp.name;
+```
+
+### Verifikasi CMS
+
+1. Buka `/admin/pricing` → tab **Add-ons** → baris **Lead Magnet** Rp 99.000.
+2. Edit harga default atau override per plan → simpan → audit log tercatat.
+
+**Panduan umum menambah add-on:** [`HANDOFF-subscription-addons-catalog.md`](./HANDOFF-subscription-addons-catalog.md)
+
+---
+
 ## [2026-07-14] CMS Admin — max_members per plan + features aman
 
 **Author:** synckerja-web (CMS admin)  

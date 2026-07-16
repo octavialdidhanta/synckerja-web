@@ -47,7 +47,10 @@ export default function AddOnsPricingTable() {
       <Card>
         <CardHeader>
           <CardTitle>Subscription Add-ons</CardTitle>
-          <CardDescription>Harga default add-on global</CardDescription>
+          <CardDescription>
+            Harga default add-on global. Add-on baru ditambahkan lewat migration SQL ke Supabase (bukan tombol di
+            halaman ini). Panduan: documents/HANDOFF-subscription-addons-catalog.md
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading && <p className="text-sm text-muted-foreground">Memuat data...</p>}

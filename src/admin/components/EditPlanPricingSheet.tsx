@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import BillingTermDiscountFields from "@/admin/components/BillingTermDiscountFields";
 import PlanModuleAccessFields from "@/admin/components/PlanModuleAccessFields";
 import { usePlanModuleAdjustments } from "@/admin/hooks/usePlanModuleAdjustments";
 import { usePlanModules } from "@/admin/hooks/usePlanModules";
@@ -6,16 +7,25 @@ import { usePlanPriceAdjustments } from "@/admin/hooks/usePlanPriceAdjustments";
 import { useUpdatePlanModules } from "@/admin/hooks/useUpdatePlanModules";
 import { useUpdatePlanPricing } from "@/admin/hooks/useUpdatePlanPricing";
 import {
-  defaultMaxMembersForPlan,
   formatIdr,
   formatIdrInput,
-  maxMembersAppliesToPlan,
+  maxMembersFieldEnabled,
+  maxMembersRequiredForPlan,
   parseIdrInput,
   validateDiscountPercent,
   validateMaxMembers,
+  validateMaxMembersOptional,
   validatePrice,
   validateTrialDays,
 } from "@/admin/lib/formatCurrency";
+import {
+  billingTermDiscountsFromPlan,
+  discountInputsFromDiscounts,
+  formatBillingTermDiscountsSummary,
+  parseBillingTermDiscounts,
+  validateBillingTermDiscounts,
+  type BillingTermKey,
+} from "@/admin/lib/billingTermDiscounts";
 import {
   createDefaultSalesModulesRecord,
   SALES_MODULE_KEYS,
@@ -74,7 +84,12 @@ function modulesFromRecord(
 export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditPlanPricingSheetProps) {
   const [activeTab, setActiveTab] = useState<"pricing" | "modules">("pricing");
   const [priceInput, setPriceInput] = useState("");
-  const [discountInput, setDiscountInput] = useState("");
+  const [discountInputs, setDiscountInputs] = useState<Record<BillingTermKey, string>>({
+    "1": "",
+    "3": "",
+    "6": "",
+    "12": "",
+  });
   const [trialDaysInput, setTrialDaysInput] = useState("");
   const [maxMembersInput, setMaxMembersInput] = useState("");
   const [isActive, setIsActive] = useState(true);
@@ -110,18 +125,17 @@ export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditP
     if (!plan || !open) return;
     setActiveTab("pricing");
     setPriceInput(formatIdrInput(Number(plan.base_price_per_member)));
-    setDiscountInput(
-      plan.annual_discount_percentage === null ? "" : String(plan.annual_discount_percentage),
+    setDiscountInputs(
+      discountInputsFromDiscounts(
+        billingTermDiscountsFromPlan(
+          plan.billing_term_discounts as Record<string, unknown> | null | undefined,
+          plan.annual_discount_percentage,
+        ),
+      ),
     );
     setTrialDaysInput(plan.jumlah_hari_trial === null ? "" : String(plan.jumlah_hari_trial));
     setMaxMembersInput(
-      maxMembersAppliesToPlan(Number(plan.base_price_per_member))
-        ? plan.max_members === null
-          ? String(
-              defaultMaxMembersForPlan(Number(plan.base_price_per_member), plan.jumlah_hari_trial),
-            )
-          : String(plan.max_members)
-        : "",
+      plan.max_members != null ? String(plan.max_members) : "",
     );
     setIsActive(plan.is_active);
     setReason("");
@@ -142,36 +156,39 @@ export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditP
   const modulesReady = baselineModules !== null;
 
   const basePrice = parseIdrInput(priceInput);
-  const annualDiscount = discountInput.trim() === "" ? null : Number(discountInput);
+  const billingTermDiscounts = parseBillingTermDiscounts(discountInputs);
   const trialDays = trialDaysInput.trim() === "" ? null : Number(trialDaysInput);
   const effectiveBasePrice =
     basePrice ?? (plan && open ? Number(plan.base_price_per_member) : null);
-  const maxMembersApplies = maxMembersAppliesToPlan(effectiveBasePrice);
-  const maxMembers = maxMembersApplies
-    ? maxMembersInput.trim() === ""
+  const maxMembersFieldOpen = maxMembersFieldEnabled(effectiveBasePrice);
+  const maxMembersRequired = maxMembersRequiredForPlan(effectiveBasePrice);
+  const maxMembers =
+    !maxMembersFieldOpen || maxMembersInput.trim() === ""
       ? null
-      : Number(maxMembersInput.replace(/[^\d]/g, ""))
-    : null;
+      : Number(maxMembersInput.replace(/[^\d]/g, ""));
 
   useEffect(() => {
-    if (!open || !maxMembersApplies) return;
+    if (!open || !maxMembersRequired) return;
     setMaxMembersInput((prev) => (prev.trim() === "" ? "1" : prev));
-  }, [maxMembersApplies, open]);
+  }, [maxMembersRequired, open]);
 
   const pricingValidationError = useMemo(() => {
     const priceErr = validatePrice(basePrice, "Harga per member");
     if (priceErr) return priceErr;
-    const discountErr = validateDiscountPercent(annualDiscount);
+    const discountErr = validateBillingTermDiscounts(billingTermDiscounts);
     if (discountErr) return discountErr;
     const trialErr = validateTrialDays(trialDays);
     if (trialErr) return trialErr;
-    if (maxMembersApplies) {
+    if (maxMembersRequired) {
       const maxErr = validateMaxMembers(maxMembers);
+      if (maxErr) return maxErr;
+    } else {
+      const maxErr = validateMaxMembersOptional(maxMembers);
       if (maxErr) return maxErr;
     }
     if (reason.trim().length < 3) return "Alasan wajib diisi (min. 3 karakter).";
     return null;
-  }, [basePrice, annualDiscount, trialDays, maxMembersApplies, maxMembers, reason]);
+  }, [basePrice, billingTermDiscounts, trialDays, maxMembersRequired, maxMembers, reason]);
 
   const modulesValidationError = useMemo(() => {
     if (modulesReason.trim().length < 3) return "Alasan wajib diisi (min. 3 karakter).";
@@ -217,7 +234,7 @@ export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditP
       await updatePlan.mutateAsync({
         plan_id: plan.id,
         base_price_per_member: basePrice,
-        annual_discount_percentage: annualDiscount,
+        billing_term_discounts: billingTermDiscounts,
         jumlah_hari_trial: trialDays,
         max_members: maxMembers,
         is_active: isActive,
@@ -288,16 +305,13 @@ export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditP
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="plan-discount">Diskon tahunan (%)</Label>
-                <Input
-                  id="plan-discount"
-                  inputMode="decimal"
-                  value={discountInput}
-                  onChange={(e) => setDiscountInput(e.target.value)}
-                  placeholder="Kosongkan jika tidak ada"
-                />
-              </div>
+              <BillingTermDiscountFields
+                values={discountInputs}
+                onChange={(key, value) =>
+                  setDiscountInputs((prev) => ({ ...prev, [key]: value }))
+                }
+                idPrefix="plan-discount"
+              />
 
               <div className="space-y-2">
                 <Label htmlFor="plan-trial">Jumlah hari trial</Label>
@@ -315,15 +329,15 @@ export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditP
                 <Input
                   id="plan-max-members"
                   inputMode="numeric"
-                  value={maxMembersApplies ? maxMembersInput : ""}
+                  value={maxMembersInput}
                   onChange={(e) => setMaxMembersInput(e.target.value)}
-                  placeholder={maxMembersApplies ? "1" : "—"}
-                  disabled={!maxMembersApplies}
+                  placeholder={maxMembersRequired ? "1" : "Kosongkan = tanpa batas (100 di office)"}
+                  disabled={!maxMembersFieldOpen}
                 />
                 <p className="text-xs text-muted-foreground">
-                  {maxMembersApplies
-                    ? "Hanya untuk plan gratis (Rp 0). Subscriber lama tidak otomatis turun (grandfather)."
-                    : "Tidak berlaku untuk plan berbayar — office menentukan jumlah member × harga."}
+                  {maxMembersRequired
+                    ? "Wajib untuk plan gratis (Rp 0). Subscriber lama tidak otomatis turun (grandfather)."
+                    : "Opsional untuk plan berbayar. Kosong = tanpa batas (default 100 member di office). Isi angka untuk membatasi slider, mis. 50 untuk Scale Up."}
                 </p>
               </div>
 
@@ -394,6 +408,8 @@ export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditP
                     moduleAccess={moduleAccess}
                     onChange={setModuleAccess}
                     disabled={modulesPending}
+                    basePricePerMember={effectiveBasePrice}
+                    planName={plan?.name ?? ""}
                   />
 
                   <div className="space-y-2">
@@ -466,8 +482,10 @@ export default function EditPlanPricingSheet({ plan, open, onOpenChange }: EditP
             <AlertDialogTitle>Konfirmasi perubahan harga</AlertDialogTitle>
             <AlertDialogDescription>
               Plan <strong>{plan.name}</strong> akan diubah menjadi{" "}
-              <strong>{formatIdr(basePrice ?? 0)}</strong>/member
-              {annualDiscount !== null ? `, diskon tahunan ${annualDiscount}%` : ""}.
+              <strong>{formatIdr(basePrice ?? 0)}</strong>/member.
+              <br />
+              Diskon periode:{" "}
+              <strong>{formatBillingTermDiscountsSummary(billingTermDiscounts)}</strong>.
               {deactivateWarning && (
                 <>
                   <br />

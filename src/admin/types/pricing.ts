@@ -1,3 +1,5 @@
+import type { BillingTermDiscounts } from "@/admin/lib/billingTermDiscounts";
+
 export type PricingEntityType = "plan" | "add_on" | "plan_add_on";
 
 export type AdminSubscriptionPlan = {
@@ -5,6 +7,7 @@ export type AdminSubscriptionPlan = {
   name: string;
   description: string | null;
   base_price_per_member: number;
+  billing_term_discounts?: BillingTermDiscounts | Record<string, number | null> | null;
   annual_discount_percentage: number | null;
   jumlah_hari_trial: number | null;
   max_members: number | null;
@@ -40,7 +43,7 @@ export type CreateSubscriptionPlanInput = {
   reason: string;
   max_members: number | null;
   description?: string | null;
-  annual_discount_percentage?: number | null;
+  billing_term_discounts?: BillingTermDiscounts;
   jumlah_hari_trial?: number | null;
 };
 
@@ -49,6 +52,7 @@ export type CreateSubscriptionPlanResult = {
   name: string;
   description: string | null;
   base_price_per_member: number;
+  billing_term_discounts?: BillingTermDiscounts | null;
   annual_discount_percentage: number | null;
   jumlah_hari_trial: number | null;
   max_members: number | null;
@@ -111,7 +115,7 @@ export type PlanPriceAdjustment = {
 export type UpdateSubscriptionPlanInput = {
   plan_id: string;
   base_price_per_member: number;
-  annual_discount_percentage: number | null;
+  billing_term_discounts: BillingTermDiscounts;
   jumlah_hari_trial: number | null;
   max_members: number | null;
   is_active: boolean;

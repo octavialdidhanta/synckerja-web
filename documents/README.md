@@ -24,3 +24,10 @@ Database Supabase **dipakai bersama** oleh:
 ## Template entry baru
 
 Lihat [`TEMPLATE-synckerja-web.md`](./TEMPLATE-synckerja-web.md).
+
+## Panduan operasional CMS
+
+| Topik | Dokumen |
+|-------|---------|
+| Menambah add-on di `/admin/pricing` | [`HANDOFF-subscription-addons-catalog.md`](./HANDOFF-subscription-addons-catalog.md) |
+| Max members per plan | [`HANDOFF-plan-max-members.md`](./HANDOFF-plan-max-members.md) |

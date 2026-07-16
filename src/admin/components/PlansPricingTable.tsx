@@ -2,6 +2,7 @@ import { useState } from "react";
 import CreatePlanSheet from "@/admin/components/CreatePlanSheet";
 import EditPlanPricingSheet from "@/admin/components/EditPlanPricingSheet";
 import { useAdminPlans } from "@/admin/hooks/useAdminPlans";
+import { formatBillingTermDiscountsSummary } from "@/admin/lib/billingTermDiscounts";
 import { formatIdr } from "@/admin/lib/formatCurrency";
 import type { AdminSubscriptionPlan } from "@/admin/types/pricing";
 import { cn } from "@/home/lib/utils";
@@ -74,7 +75,7 @@ export default function PlansPricingTable() {
                   <TableRow>
                     <TableHead>Plan</TableHead>
                     <TableHead>Harga/member</TableHead>
-                    <TableHead>Diskon tahunan</TableHead>
+                    <TableHead>Diskon term</TableHead>
                     <TableHead>Hari trial</TableHead>
                     <TableHead>Max member</TableHead>
                     <TableHead>Subscriber</TableHead>
@@ -88,15 +89,13 @@ export default function PlansPricingTable() {
                     <TableRow key={row.id}>
                       <TableCell className="font-medium">{row.name}</TableCell>
                       <TableCell>{formatIdr(Number(row.base_price_per_member))}</TableCell>
-                      <TableCell>
-                        {row.annual_discount_percentage === null
-                          ? "—"
-                          : `${row.annual_discount_percentage}%`}
+                      <TableCell className="max-w-[240px] text-xs">
+                        {formatBillingTermDiscountsSummary(
+                          row.billing_term_discounts as Record<string, number | null> | null | undefined,
+                        )}
                       </TableCell>
                       <TableCell>{row.jumlah_hari_trial ?? "—"}</TableCell>
-                      <TableCell>
-                        {Number(row.base_price_per_member) > 0 ? "—" : (row.max_members ?? "—")}
-                      </TableCell>
+                      <TableCell>{row.max_members ?? "—"}</TableCell>
                       <TableCell>{row.subscriber_count}</TableCell>
                       <TableCell>
                         {row.enabled_module_labels && row.enabled_module_labels.length > 0 ? (

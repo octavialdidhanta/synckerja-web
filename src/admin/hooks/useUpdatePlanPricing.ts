@@ -21,7 +21,7 @@ export function useUpdatePlanPricing() {
       const { data, error } = await supabase.rpc("admin_update_subscription_plan", {
         p_plan_id: input.plan_id,
         p_base_price_per_member: input.base_price_per_member,
-        p_annual_discount_percentage: input.annual_discount_percentage,
+        p_billing_term_discounts: input.billing_term_discounts,
         p_jumlah_hari_trial: input.jumlah_hari_trial,
         p_max_members: input.max_members,
         p_is_active: input.is_active,

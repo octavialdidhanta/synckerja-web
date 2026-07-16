@@ -15,7 +15,7 @@ async function createSubscriptionPlan(
     p_is_active: input.is_active,
     p_reason: input.reason.trim(),
     p_description: input.description?.trim() || null,
-    p_annual_discount_percentage: input.annual_discount_percentage ?? null,
+    p_billing_term_discounts: input.billing_term_discounts ?? null,
     p_jumlah_hari_trial: input.jumlah_hari_trial ?? null,
     p_max_members: input.max_members,
   });

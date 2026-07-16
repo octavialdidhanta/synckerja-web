@@ -1,15 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
+import BillingTermDiscountFields from "@/admin/components/BillingTermDiscountFields";
 import PlanModuleAccessFields from "@/admin/components/PlanModuleAccessFields";
 import { useCreateSubscriptionPlan } from "@/admin/hooks/useCreateSubscriptionPlan";
 import {
   formatIdr,
-  maxMembersAppliesToPlan,
+  maxMembersFieldEnabled,
+  maxMembersRequiredForPlan,
   parseIdrInput,
-  validateDiscountPercent,
   validateMaxMembers,
+  validateMaxMembersOptional,
   validatePrice,
   validateTrialDays,
 } from "@/admin/lib/formatCurrency";
+import {
+  defaultBillingTermDiscounts,
+  discountInputsFromDiscounts,
+  parseBillingTermDiscounts,
+  validateBillingTermDiscounts,
+  type BillingTermKey,
+} from "@/admin/lib/billingTermDiscounts";
 import {
   createDefaultSalesModulesRecord,
   type SalesModuleKey,
@@ -50,7 +59,9 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
   const [nameInput, setNameInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
   const [priceInput, setPriceInput] = useState("");
-  const [discountInput, setDiscountInput] = useState("");
+  const [discountInputs, setDiscountInputs] = useState(
+    discountInputsFromDiscounts(defaultBillingTermDiscounts()),
+  );
   const [trialDaysInput, setTrialDaysInput] = useState("");
   const [maxMembersInput, setMaxMembersInput] = useState("1");
   const [isActive, setIsActive] = useState(true);
@@ -67,7 +78,7 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
     setNameInput("");
     setDescriptionInput("");
     setPriceInput("");
-    setDiscountInput("");
+    setDiscountInputs(discountInputsFromDiscounts(defaultBillingTermDiscounts()));
     setTrialDaysInput("");
     setMaxMembersInput("1");
     setIsActive(true);
@@ -78,19 +89,19 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
 
   const slug = nameInput.trim().toLowerCase();
   const basePrice = parseIdrInput(priceInput);
-  const annualDiscount = discountInput.trim() === "" ? null : Number(discountInput);
+  const billingTermDiscounts = parseBillingTermDiscounts(discountInputs);
   const trialDays = trialDaysInput.trim() === "" ? null : Number(trialDaysInput);
-  const maxMembersApplies = maxMembersAppliesToPlan(basePrice);
-  const maxMembers = maxMembersApplies
-    ? maxMembersInput.trim() === ""
+  const maxMembersFieldOpen = maxMembersFieldEnabled(basePrice);
+  const maxMembersRequired = maxMembersRequiredForPlan(basePrice);
+  const maxMembers =
+    !maxMembersFieldOpen || maxMembersInput.trim() === ""
       ? null
-      : Number(maxMembersInput.replace(/[^\d]/g, ""))
-    : null;
+      : Number(maxMembersInput.replace(/[^\d]/g, ""));
 
   useEffect(() => {
-    if (!maxMembersApplies) return;
+    if (!maxMembersRequired) return;
     setMaxMembersInput((prev) => (prev.trim() === "" ? "1" : prev));
-  }, [maxMembersApplies]);
+  }, [maxMembersRequired]);
 
   const validationError = useMemo(() => {
     if (!slug || slug.length < 2) return "Nama plan wajib diisi (min. 2 karakter).";
@@ -99,17 +110,20 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
     }
     const priceErr = validatePrice(basePrice, "Harga per member");
     if (priceErr) return priceErr;
-    const discountErr = validateDiscountPercent(annualDiscount);
+    const discountErr = validateBillingTermDiscounts(billingTermDiscounts);
     if (discountErr) return discountErr;
     const trialErr = validateTrialDays(trialDays);
     if (trialErr) return trialErr;
-    if (maxMembersApplies) {
+    if (maxMembersRequired) {
       const maxErr = validateMaxMembers(maxMembers);
+      if (maxErr) return maxErr;
+    } else {
+      const maxErr = validateMaxMembersOptional(maxMembers);
       if (maxErr) return maxErr;
     }
     if (reason.trim().length < 3) return "Alasan wajib diisi (min. 3 karakter).";
     return null;
-  }, [slug, basePrice, annualDiscount, trialDays, maxMembersApplies, maxMembers, reason]);
+  }, [slug, basePrice, billingTermDiscounts, trialDays, maxMembersRequired, maxMembers, reason]);
 
   const enabledModuleCount = useMemo(
     () => Object.values(moduleAccess).filter(Boolean).length,
@@ -128,7 +142,7 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
         reason: reason.trim(),
         max_members: maxMembers,
         description: descriptionInput.trim() || null,
-        annual_discount_percentage: annualDiscount,
+        billing_term_discounts: billingTermDiscounts,
         jumlah_hari_trial: trialDays,
       });
       toast.success(`Plan "${slug}" berhasil dibuat.`);
@@ -191,16 +205,13 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="create-plan-discount">Diskon tahunan (%)</Label>
-              <Input
-                id="create-plan-discount"
-                inputMode="decimal"
-                value={discountInput}
-                onChange={(e) => setDiscountInput(e.target.value)}
-                placeholder="Kosongkan jika tidak ada"
-              />
-            </div>
+            <BillingTermDiscountFields
+              values={discountInputs}
+              onChange={(key, value) =>
+                setDiscountInputs((prev) => ({ ...prev, [key]: value }))
+              }
+              idPrefix="create-plan-discount"
+            />
 
             <div className="space-y-2">
               <Label htmlFor="create-plan-trial">Jumlah hari trial</Label>
@@ -218,15 +229,15 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
               <Input
                 id="create-plan-max-members"
                 inputMode="numeric"
-                value={maxMembersApplies ? maxMembersInput : ""}
+                value={maxMembersInput}
                 onChange={(e) => setMaxMembersInput(e.target.value)}
-                placeholder={maxMembersApplies ? "1" : "—"}
-                disabled={!maxMembersApplies}
+                placeholder={maxMembersRequired ? "1" : "Kosongkan = tanpa batas (100 di office)"}
+                disabled={basePrice === null}
               />
               <p className="text-xs text-muted-foreground">
-                {maxMembersApplies
-                  ? "Hanya untuk plan gratis (Rp 0). Batas seat saat subscribe."
-                  : "Tidak berlaku untuk plan berbayar — office menentukan jumlah member × harga."}
+                {maxMembersRequired
+                  ? "Wajib untuk plan gratis (Rp 0). Batas seat saat subscribe."
+                  : "Opsional untuk plan berbayar. Kosong = tanpa batas; isi angka untuk cap slider di office."}
               </p>
             </div>
 
@@ -239,6 +250,8 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
               moduleAccess={moduleAccess}
               onChange={setModuleAccess}
               disabled={isPending}
+              basePricePerMember={basePrice}
+              planName={nameInput}
             />
 
             <div className="space-y-2">
@@ -270,15 +283,18 @@ export default function CreatePlanSheet({ open, onOpenChange }: CreatePlanSheetP
             <AlertDialogTitle>Konfirmasi buat plan</AlertDialogTitle>
             <AlertDialogDescription>
               Plan <strong>{slug}</strong> akan dibuat dengan harga{" "}
-              <strong>{formatIdr(basePrice ?? 0)}</strong>/member
-              {annualDiscount !== null ? `, diskon tahunan ${annualDiscount}%` : ""}.
+              <strong>{formatIdr(basePrice ?? 0)}</strong>/member.
               <br />
               <br />
               Modul aktif: <strong>{enabledModuleCount}</strong> dari 8.
               <br />
               Max member:{" "}
               <strong>
-                {maxMembersApplies ? (maxMembers ?? "—") : "— (berdasarkan jumlah member)"}
+                {maxMembersRequired
+                  ? (maxMembers ?? "—")
+                  : maxMembers != null
+                    ? maxMembers
+                    : "Tanpa batas (100 di office)"}
               </strong>.
               {!isActive && (
                 <>

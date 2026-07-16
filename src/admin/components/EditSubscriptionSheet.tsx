@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import DeleteOrganizationDialog from "@/admin/components/DeleteOrganizationDialog";
+import SalesModuleAccessFields from "@/admin/components/SalesModuleAccessFields";
 import { useUpdateOrganizationSubscription } from "@/admin/hooks/useUpdateOrganizationSubscription";
 import { useUpdateOrganizationSettings } from "@/admin/hooks/useUpdateOrganizationSettings";
 import { useOrganizationModuleAdjustments } from "@/admin/hooks/useOrganizationModuleAdjustments";
@@ -7,8 +8,9 @@ import { useOrganizationSalesModules } from "@/admin/hooks/useOrganizationSalesM
 import { useUpdateOrganizationSalesModules } from "@/admin/hooks/useUpdateOrganizationSalesModules";
 import { useSubscriptionAdjustments } from "@/admin/hooks/useSubscriptionAdjustments";
 import {
+  coerceSalesModuleDependencies,
   createDefaultSalesModulesRecord,
-  SALES_MODULE_CATALOG,
+  SALES_MODULE_KEYS,
   salesModuleLabel,
   type SalesModuleKey,
 } from "@/admin/lib/salesModuleCatalog";
@@ -178,7 +180,7 @@ export default function EditSubscriptionSheet({
 
   const modulesDirty = useMemo(() => {
     if (!salesModules?.is_sales_tenant) return false;
-    return SALES_MODULE_CATALOG.some(({ key }) => moduleAccess[key] !== salesModules.modules[key]);
+    return SALES_MODULE_KEYS.some((key) => moduleAccess[key] !== salesModules.modules[key]);
   }, [moduleAccess, salesModules]);
 
   const handleSave = async () => {
@@ -226,7 +228,7 @@ export default function EditSubscriptionSheet({
     try {
       await modulesMutation.mutateAsync({
         organization_id: row.organization_id,
-        modules: moduleAccess,
+        modules: coerceSalesModuleDependencies(moduleAccess),
         reason: modulesReason.trim(),
       });
       toast.success("Akses modul berhasil diperbarui.");
@@ -429,29 +431,10 @@ export default function EditSubscriptionSheet({
                   )}
 
                   {!salesModulesLoading && (
-                    <div className="space-y-2">
-                      {SALES_MODULE_CATALOG.map(({ key, label }) => (
-                        <div
-                          key={key}
-                          className="flex items-center justify-between gap-3 rounded-md border p-3"
-                        >
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium">{label}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {moduleAccess[key]
-                                ? "Aktif — tenant bisa akses modul"
-                                : "Blocked — upsell di office"}
-                            </p>
-                          </div>
-                          <Switch
-                            checked={moduleAccess[key]}
-                            onCheckedChange={(checked) =>
-                              setModuleAccess((prev) => ({ ...prev, [key]: checked }))
-                            }
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    <SalesModuleAccessFields
+                      moduleAccess={moduleAccess}
+                      onChange={setModuleAccess}
+                    />
                   )}
 
                   <div className="space-y-2">

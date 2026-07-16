@@ -30,10 +30,13 @@ export function validatePrice(amount: number | null, label = "Harga"): string | 
   return null;
 }
 
-export function validateDiscountPercent(value: number | null): string | null {
+export function validateDiscountPercent(
+  value: number | null,
+  label = "Diskon tahunan",
+): string | null {
   if (value === null) return null;
   if (Number.isNaN(value) || value < 0 || value > 100) {
-    return "Diskon tahunan harus antara 0 dan 100%.";
+    return `${label} harus antara 0 dan 100%.`;
   }
   return null;
 }
@@ -46,6 +49,9 @@ export function validateTrialDays(value: number | null): string | null {
   return null;
 }
 
+/** Default slider cap for paid per-member plans when CMS leaves max_members NULL. */
+export const DEFAULT_PAID_PLAN_MAX_MEMBERS = 100;
+
 export function validateMaxMembers(value: number | null): string | null {
   if (value === null || Number.isNaN(value)) return "Max member wajib diisi.";
   if (!Number.isInteger(value) || value < 1 || value > 1000) {
@@ -54,14 +60,33 @@ export function validateMaxMembers(value: number | null): string | null {
   return null;
 }
 
-/** Plan berbayar per member — cap ditentukan jumlah member di office, bukan kolom max_members. */
+/** Validates optional cap (NULL = tanpa batas di office). */
+export function validateMaxMembersOptional(value: number | null): string | null {
+  if (value === null || Number.isNaN(value)) return null;
+  if (!Number.isInteger(value) || value < 1 || value > 1000) {
+    return "Max member harus bilangan bulat antara 1 dan 1000.";
+  }
+  return null;
+}
+
+/** Plan berbayar per member — harga × jumlah member di office. */
 export function planUsesPerMemberPricing(basePrice: number | null): boolean {
   return basePrice !== null && basePrice > 0;
 }
 
-/** Max member hanya untuk plan gratis (harga Rp 0). */
-export function maxMembersAppliesToPlan(basePrice: number | null): boolean {
+/** Field max member dapat diedit untuk plan dengan harga terdefinisi. */
+export function maxMembersFieldEnabled(basePrice: number | null): boolean {
+  return basePrice !== null;
+}
+
+/** Plan gratis (Rp 0) wajib mengisi cap; plan berbayar opsional (kosong = tanpa batas). */
+export function maxMembersRequiredForPlan(basePrice: number | null): boolean {
   return basePrice !== null && basePrice === 0;
+}
+
+/** @deprecated use maxMembersFieldEnabled */
+export function maxMembersAppliesToPlan(basePrice: number | null): boolean {
+  return maxMembersFieldEnabled(basePrice);
 }
 
 /** Default cap untuk plan gratis / trial tanpa harga. */
