@@ -4,15 +4,19 @@ import { ChevronDown } from "lucide-react";
 const faqs = [
   {
     q: "Synckerja Office membantu owner menyelesaikan masalah apa?",
-    a: "Mengontrol biaya tenaga kerja, merapikan absensi/cuti/lembur, mempercepat payroll, dan memberi visibilitas lintas cabang—supaya Anda bisa ambil keputusan cepat berbasis data.",
+    a: "Mengontrol biaya tenaga kerja, merapikan absensi/cuti/lembur, mempercepat payroll, dan memberi visibilitas lintas cabang—supaya Anda bisa ambil keputusan cepat berbasis data. Plus modul digital: CRM, media sosial, dan iklan.",
+  },
+  {
+    q: "Apakah Synckerja terhubung dengan Facebook dan Instagram (Meta)?",
+    a: "Ya. Klien bisnis menghubungkan Facebook Page dan akun Instagram profesional mereka sendiri melalui Meta login di aplikasi Synckerja Office. Dengan izin klien, platform dipakai untuk menampilkan akun terhubung, publikasi/jadwal konten (termasuk Reels), serta fitur pesan/engagement yang diaktifkan. Synckerja bertindak atas nama klien yang memberi otorisasi dan tidak menjual Platform Data Meta.",
   },
   {
     q: "Bisnis seperti apa yang paling cocok memakai Synckerja Office?",
-    a: "Cocok untuk bisnis bertumbuh (tim puluhan–ribuan), multi-shift atau multi-cabang, yang butuh kontrol disiplin, produktivitas, dan biaya payroll tanpa menambah beban admin.",
+    a: "Cocok untuk bisnis bertumbuh (tim puluhan–ribuan), multi-shift atau multi-cabang, yang butuh kontrol disiplin, produktivitas, dan biaya payroll tanpa menambah beban admin—sekaligus menyatukan CRM dan kanal digital.",
   },
   {
     q: "Bagaimana keamanan data dan kontrol aksesnya?",
-    a: "Akses bisa diatur per peran (role-based) dan aktivitas penting tercatat (audit trail). Ini menjaga data sensitif (karyawan & payroll) tetap aman dan mudah ditelusuri saat dibutuhkan.",
+    a: "Akses bisa diatur per peran (role-based) dan aktivitas penting tercatat (audit trail). Ini menjaga data sensitif (karyawan & payroll) tetap aman dan mudah ditelusuri saat dibutuhkan. Integrasi Meta hanya memakai data yang diizinkan klien untuk layanan yang mereka aktifkan.",
   },
   {
     q: "Berapa lama onboarding sampai bisa dipakai tim?",

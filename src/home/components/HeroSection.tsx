@@ -20,9 +20,9 @@ const HeroSection = () => {
             <ul className="mb-8 mt-6 space-y-3">
               {[
                 "CRM terintegrasi: lacak pelanggan dan pipeline sales dalam satu dashboard",
+                "Hubungkan Facebook Page & Instagram untuk jadwal, Reels, dan pesan pelanggan",
                 "Kelola proyek, media sosial, dan iklan tanpa pindah-pindah tools",
                 "SDM dan administrasi tim dalam sistem yang sama",
-                "Pantau performa tim dan operasional dari satu dashboard",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-muted-foreground">
                   <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-primary" />

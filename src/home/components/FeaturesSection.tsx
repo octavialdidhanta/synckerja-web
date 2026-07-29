@@ -30,9 +30,13 @@ const features: {
   },
   {
     id: "sosmed",
-    title: "Media Sosial",
-    desc: "Rencanakan, jadwalkan, dan pantau konten media sosial brand Anda dari satu tempat.",
-    items: ["Kalender konten", "Jadwal posting", "Monitoring engagement"],
+    title: "Media Sosial (Facebook & Instagram)",
+    desc: "Hubungkan Facebook Page dan Instagram profesional klien via Meta login. Rencanakan, jadwalkan, dan publikasikan konten serta Reels dari satu workspace.",
+    items: [
+      "Connect Facebook Page & Instagram",
+      "Jadwal posting & publish Reels",
+      "Status akun & engagement terotorisasi",
+    ],
   },
   {
     id: "iklan",

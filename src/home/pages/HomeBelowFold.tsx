@@ -3,6 +3,7 @@ import CaseStudiesSection from "@/home/components/CaseStudiesSection";
 import FAQSection from "@/home/components/FAQSection";
 import FeaturesSection from "@/home/components/FeaturesSection";
 import FooterSection from "@/home/components/FooterSection";
+import MetaChannelsSection from "@/home/components/MetaChannelsSection";
 import WhyChooseSection from "@/home/components/WhyChooseSection";
 
 /**
@@ -14,6 +15,9 @@ export default function HomeBelowFold() {
     <>
       <DeferredRender>
         <FeaturesSection />
+      </DeferredRender>
+      <DeferredRender>
+        <MetaChannelsSection />
       </DeferredRender>
       <DeferredRender>
         <WhyChooseSection />

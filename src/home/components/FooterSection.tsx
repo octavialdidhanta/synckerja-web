@@ -55,7 +55,7 @@ const FooterSection = () => {
               </div>
             </div>
             <p className="text-sm text-background/75">
-              Software HR terintegrasi untuk mengelola SDM secara efisien.
+              Software bisnis terintegrasi untuk SDM, CRM, media sosial (Facebook & Instagram), dan operasional tim.
             </p>
           </div>
           {footerColumns.map((col) => (
