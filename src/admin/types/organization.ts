@@ -36,6 +36,29 @@ export type SubscriptionAdjustmentState = {
   auto_renew?: boolean;
   has_active_subscription?: boolean;
   subscription_self_service_enabled?: boolean;
+  omnichannel_paid_seat_count?: number;
+  member_count?: number;
+  modules?: Record<string, boolean>;
+  removed_roster?: Array<{
+    employee_id?: string;
+    full_name?: string;
+    email?: string | null;
+  }>;
+  sales_outlet_quota?: number | null;
+  closed_outlets?: Array<{ id?: string; name?: string }>;
+  sales_monthly_price_idr?: number | null;
+  sales_billing_mode?: "monthly" | "prepaid" | null;
+  sales_ppn_included?: boolean | null;
+  sales_price_effective_on?: string | null;
+  period_value_idr?: number | null;
+  adjustment_idr?: number | null;
+};
+
+export type OmnichannelRosterMember = {
+  employee_id: string;
+  full_name: string;
+  email: string | null;
+  role: string;
 };
 
 export type SubscriptionAdjustmentRow = {
@@ -46,6 +69,7 @@ export type SubscriptionAdjustmentRow = {
   before_state: SubscriptionAdjustmentState;
   after_state: SubscriptionAdjustmentState;
   created_at: string;
+  contract_path: string | null;
 };
 
 export type UpdateOrganizationSubscriptionInput = {
@@ -54,6 +78,7 @@ export type UpdateOrganizationSubscriptionInput = {
   trial_end_date: string | null;
   subscription_end_date: string | null;
   reason: string;
+  contract_path?: string | null;
 };
 
 export type UpdateOrganizationSettingsInput = {
@@ -83,6 +108,39 @@ export type OrganizationSalesModules = {
   organization_id: string;
   is_sales_tenant: boolean;
   modules: Record<SalesModuleKey, boolean>;
+  omnichannel_paid_seat_count: number;
+  hr_seat_count: number;
+  active_employee_count: number;
+  roster_eligible_employee_count: number;
+  omnichannel_roster: OmnichannelRosterMember[];
+  sales_outlet_quota: number | null;
+  outlets: SalesOutletChoice[];
+  sales_monthly_price_idr: number | null;
+  sales_billing_mode: "monthly" | "prepaid" | null;
+  sales_ppn_included: boolean | null;
+  sales_price_effective_on: string | null;
+};
+
+export type SalesOutletChoice = {
+  id: string;
+  name: string;
+  is_active: boolean;
+  is_default: boolean;
+};
+
+export type SetOrganizationOmnichannelSeatsInput = {
+  organization_id: string;
+  seats: number;
+  reason: string;
+  keep_employee_ids: string[];
+};
+
+export type SetOrganizationHrSeatsInput = {
+  organization_id: string;
+  seats: number;
+  reason: string;
+  keep_employee_ids: string[];
+  omnichannel_seats: number | null;
 };
 
 export type OrganizationModuleAdjustmentRow = {

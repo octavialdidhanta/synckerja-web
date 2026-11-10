@@ -14,6 +14,7 @@ async function updateOrganizationSubscription(
     p_trial_end_date: input.trial_end_date,
     p_subscription_end_date: input.subscription_end_date,
     p_reason: input.reason.trim(),
+    p_contract_path: input.contract_path ?? null,
   });
 
   if (error) throw error;

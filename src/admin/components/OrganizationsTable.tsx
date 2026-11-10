@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { formatWibDateTime } from "@/admin/lib/subscriptionDates";
 import EditSubscriptionSheet from "@/admin/components/EditSubscriptionSheet";
 import { useAdminOrganizations } from "@/admin/hooks/useAdminOrganizations";
 import type { AdminOrganizationRow, OrganizationSubscriptionFilter } from "@/admin/types/organization";
@@ -20,7 +21,9 @@ function formatDate(value: string | null) {
 }
 
 function formatEndDate(row: AdminOrganizationRow) {
-  return formatDate(row.is_trial ? row.trial_end_date : row.subscription_end_date);
+  const value = row.is_trial ? row.trial_end_date : row.subscription_end_date;
+  if (!row.subscription_self_service_enabled && !row.is_trial) return formatWibDateTime(value);
+  return formatDate(value);
 }
 
 function TenantTypeBadge({ selfServiceEnabled }: { selfServiceEnabled: boolean }) {
@@ -124,7 +127,9 @@ export default function OrganizationsTable() {
                   <TableRow key={row.organization_id}>
                     <TableCell className="font-medium">{row.company_name}</TableCell>
                     <TableCell>{row.email ?? "—"}</TableCell>
-                    <TableCell>{row.plan_name ?? "—"}</TableCell>
+                    <TableCell>
+                      {row.subscription_self_service_enabled === false ? "Custom" : (row.plan_name ?? "—")}
+                    </TableCell>
                     <TableCell>
                       <TenantTypeBadge selfServiceEnabled={row.subscription_self_service_enabled} />
                     </TableCell>

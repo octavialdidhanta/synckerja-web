@@ -9,7 +9,8 @@ export const SALES_MODULE_TOP_LEVEL = [
   { key: "finance", label: "Finance" },
   { key: "digitalMarketing", label: "Digital Marketing" },
   { key: "omnichannel", label: "Operations / Omnichannel" },
-  { key: "operations", label: "Sales Operations" },
+  { key: "pos", label: "POS" },
+  { key: "operations", label: "Operations" },
   { key: "tools", label: "Tools" },
   { key: "requestForm", label: "Request Form" },
 ] as const;
@@ -34,7 +35,7 @@ export type SalesPlanFeatureKey = (typeof SALES_PLAN_FEATURE_TOGGLES)[number]["k
 export type SalesSubModuleScope = "orgSales";
 
 export type SalesSubModuleDefinition = {
-  key: "leadMagnet";
+  key: "leadMagnet" | "whatsappBusiness";
   label: string;
   parentKey: SalesModuleTopLevelKey;
   description: string;
@@ -48,6 +49,14 @@ export const SALES_SUB_MODULES: readonly SalesSubModuleDefinition[] = [
     label: "Lead Magnet",
     parentKey: "digitalMarketing",
     description: "Add-on — aktifkan manual untuk tenant sales",
+    scopes: ["orgSales"],
+  },
+  {
+    key: "whatsappBusiness",
+    label: "WhatsApp Business API",
+    parentKey: "omnichannel",
+    description:
+      "Livechat, integrasi WhatsApp, Instagram, Facebook, Threads, email, campaign, template, flow builder, dan user management",
     scopes: ["orgSales"],
   },
 ] as const;
@@ -101,9 +110,10 @@ export function applySalesModuleParentRules(
   nextValue: boolean,
 ): Record<SalesModuleKey, boolean> {
   const next = { ...modules, [changedKey]: nextValue };
+  const parent = SALES_MODULE_TOP_LEVEL.find((mod) => mod.key === changedKey);
 
-  if (changedKey === "digitalMarketing" && !nextValue) {
-    for (const sub of getSubModulesForParent("digitalMarketing", "orgSales")) {
+  if (parent && !nextValue) {
+    for (const sub of getSubModulesForParent(parent.key, "orgSales")) {
       next[sub.key] = false;
     }
   }
