@@ -184,6 +184,7 @@ function buildArticles(input: {
     modules: pending.modules,
     hrSeats: pending.hr_seat_count,
     omniSeats: pending.omnichannel_paid_seat_count,
+    aiEmployeeSeats: pending.ai_employee_seat_count,
     outletQuota: pending.outlet_quota,
     keptOutletNames: input.keptOutletNames,
   });
@@ -200,6 +201,12 @@ function buildArticles(input: {
       `Kuota seat Human Resources yang disepakati adalah ${spelled(pending.hr_seat_count)} pengguna aktif. Pelanggan tidak menambah pengguna aktif Human Resources di luar kuota itu.`,
     );
   }
+  const aiRow = rows.find((row) => row.label === "Kuota karyawan AI");
+  if (aiRow) {
+    pushQuota(
+      `Kuota karyawan AI yang disepakati adalah ${spelled(pending.ai_employee_seat_count)} karyawan AI aktif. Pelanggan tidak menambah karyawan AI aktif di luar kuota itu.`,
+    );
+  }
   if (rosterRow) {
     pushQuota(
       `Kuota user omnichannel yang disepakati adalah ${spelled(pending.omnichannel_paid_seat_count)} pengguna. Pelanggan tidak menambah pengguna roster di luar kuota itu.`,
@@ -214,7 +221,7 @@ function buildArticles(input: {
       pushQuota(`Cabang yang tetap buka adalah ${openNames.join(", ")}.`);
     }
   }
-  if (!hrRow && !rosterRow && !outletRow) {
+  if (!hrRow && !rosterRow && !outletRow && !aiRow) {
     pushQuota(
       "Lampiran tidak mencantumkan kuota tambahan. Batas pengguna mengikuti pengaturan layanan yang berlaku bagi Modul Aktif.",
     );

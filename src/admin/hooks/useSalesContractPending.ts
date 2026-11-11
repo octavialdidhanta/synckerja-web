@@ -17,6 +17,7 @@ export type SaveSalesContractPendingInput = {
   modules: Record<SalesModuleKey, boolean>;
   hr_seat_count: number;
   omnichannel_paid_seat_count: number;
+  ai_employee_seat_count: number;
   keep_employee_ids: string[];
   outlet_quota: number | null;
   keep_outlet_ids: string[];
@@ -65,6 +66,7 @@ export function useSaveSalesContractPending() {
         p_modules: input.modules,
         p_hr_seat_count: input.hr_seat_count,
         p_omnichannel_paid_seat_count: input.omnichannel_paid_seat_count,
+        p_ai_employee_seat_count: input.ai_employee_seat_count,
         p_keep_employee_ids: input.keep_employee_ids,
         p_outlet_quota: input.outlet_quota,
         p_keep_outlet_ids: input.keep_outlet_ids,

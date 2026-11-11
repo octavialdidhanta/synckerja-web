@@ -31,6 +31,7 @@ function pending(): SalesContractPending {
     modules,
     hr_seat_count: 3,
     omnichannel_paid_seat_count: 2,
+    ai_employee_seat_count: 0,
     keep_employee_ids: [],
     outlet_quota: 2,
     keep_outlet_ids: [],

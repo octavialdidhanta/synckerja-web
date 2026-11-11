@@ -3,7 +3,9 @@ import {
   applySalesModuleParentRules,
   getSubModulesForParent,
   SALES_MODULE_TOP_LEVEL,
+  SALES_ORG_ONLY_MODULES,
   type SalesModuleKey,
+  type SalesModuleTopLevelKey,
 } from "@/admin/lib/salesModuleCatalog";
 import { Switch } from "@/share/ui/switch";
 
@@ -30,10 +32,20 @@ export default function SalesModuleAccessFields({
     onChange(applySalesModuleParentRules(moduleAccess, key, checked));
   };
 
+  const orgModules = [
+    SALES_MODULE_TOP_LEVEL[0],
+    SALES_MODULE_TOP_LEVEL[1],
+    ...SALES_ORG_ONLY_MODULES,
+    ...SALES_MODULE_TOP_LEVEL.slice(2),
+  ];
+
   return (
     <div className="space-y-2">
-      {SALES_MODULE_TOP_LEVEL.map(({ key, label }) => {
-        const subModules = getSubModulesForParent(key, "orgSales");
+      {orgModules.map(({ key, label }) => {
+        const parentKey = SALES_MODULE_TOP_LEVEL.find((mod) => mod.key === key)?.key;
+        const subModules = parentKey
+          ? getSubModulesForParent(parentKey as SalesModuleTopLevelKey, "orgSales")
+          : [];
         const parentEnabled = moduleAccess[key];
 
         return (

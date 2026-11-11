@@ -29,6 +29,13 @@ export const SALES_PLAN_FEATURE_TOGGLES = [
   },
 ] as const;
 
+/** Org sales sheet only. Not shown on Edit Plan. */
+export const SALES_ORG_ONLY_MODULES = [
+  { key: "aiEmployee", label: "Karyawan AI" },
+] as const;
+
+export type SalesOrgOnlyKey = (typeof SALES_ORG_ONLY_MODULES)[number]["key"];
+
 export type SalesModuleTopLevelKey = (typeof SALES_MODULE_TOP_LEVEL)[number]["key"];
 export type SalesPlanFeatureKey = (typeof SALES_PLAN_FEATURE_TOGGLES)[number]["key"];
 
@@ -71,11 +78,12 @@ export const SALES_MODULE_CATALOG = [
 
 export type SalesModuleCatalogKey = SalesModuleTopLevelKey | SalesPlanFeatureKey;
 
-export type SalesModuleKey = SalesModuleCatalogKey | SalesSubModuleKey;
+export type SalesModuleKey = SalesModuleCatalogKey | SalesSubModuleKey | SalesOrgOnlyKey;
 
 export const SALES_MODULE_KEYS: SalesModuleKey[] = [
   ...SALES_MODULE_CATALOG.map((m) => m.key),
   ...SALES_SUB_MODULES.map((m) => m.key),
+  ...SALES_ORG_ONLY_MODULES.map((m) => m.key),
 ];
 
 export function createDefaultSalesModulesRecord(): Record<SalesModuleKey, boolean> {
@@ -92,7 +100,9 @@ export function salesModuleLabel(key: SalesModuleKey): string {
   const catalog = SALES_MODULE_CATALOG.find((m) => m.key === key);
   if (catalog) return catalog.label;
   const sub = SALES_SUB_MODULES.find((m) => m.key === key);
-  return sub?.label ?? key;
+  if (sub) return sub.label;
+  const orgOnly = SALES_ORG_ONLY_MODULES.find((m) => m.key === key);
+  return orgOnly?.label ?? key;
 }
 
 export function getSubModulesForParent(

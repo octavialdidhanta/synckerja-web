@@ -110,7 +110,9 @@ export type OrganizationSalesModules = {
   modules: Record<SalesModuleKey, boolean>;
   omnichannel_paid_seat_count: number;
   hr_seat_count: number;
+  ai_employee_seat_count: number;
   active_employee_count: number;
+  active_ai_employee_count: number;
   roster_eligible_employee_count: number;
   omnichannel_roster: OmnichannelRosterMember[];
   sales_outlet_quota: number | null;

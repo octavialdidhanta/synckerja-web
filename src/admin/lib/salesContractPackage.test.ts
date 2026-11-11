@@ -24,6 +24,7 @@ function pending(overrides: Partial<SalesContractPending> = {}): SalesContractPe
     modules,
     hr_seat_count: 4,
     omnichannel_paid_seat_count: 2,
+    ai_employee_seat_count: 0,
     keep_employee_ids: [],
     outlet_quota: 1,
     keep_outlet_ids: [],
@@ -55,6 +56,7 @@ describe("sales contract package", () => {
           modules: formModules,
           hrSeats: 4,
           omniSeats: 2,
+          aiEmployeeSeats: 0,
           keepEmployeeIds: [],
           outletQuota: 1,
           keepOutletIds: [],
@@ -97,6 +99,17 @@ describe("sales contract package", () => {
       "POS:Aktif",
       "Kuota seat HR:0",
     ]);
+  });
+
+  it("lists the agreed AI employee quota", () => {
+    const rows = agreedContractRows({
+      modules: { aiEmployee: true },
+      hrSeats: 0,
+      omniSeats: 0,
+      aiEmployeeSeats: 2,
+    });
+
+    expect(rows).toEqual([{ label: "Kuota karyawan AI", value: "2" }]);
   });
 
   it("lists WhatsApp Business and a roster quota without listing inactive modules", () => {
@@ -151,6 +164,7 @@ describe("sales contract package", () => {
         modules: { okr: true, finance: true, pos: true, humanResources: true, omnichannel: true },
         hr_seat_count: 3,
         omnichannel_paid_seat_count: 2,
+        ai_employee_seat_count: 0,
         outlet_quota: 3,
       },
       outlets: [
@@ -187,6 +201,7 @@ describe("sales contract package", () => {
         modules: { pos: true },
         hr_seat_count: 0,
         omnichannel_paid_seat_count: 0,
+        ai_employee_seat_count: 0,
         outlet_quota: 3,
       },
       outlets: [
@@ -214,6 +229,7 @@ describe("sales contract package", () => {
           modules: formModules,
           hrSeats: 4,
           omniSeats: 2,
+          aiEmployeeSeats: 0,
           keepEmployeeIds: [],
           outletQuota: 1,
           keepOutletIds: [],
@@ -236,6 +252,7 @@ describe("sales contract package", () => {
           modules: priced.modules,
           hrSeats: priced.hr_seat_count,
           omniSeats: priced.omnichannel_paid_seat_count,
+          aiEmployeeSeats: priced.ai_employee_seat_count,
           keepEmployeeIds: [],
           outletQuota: priced.outlet_quota ?? 0,
           keepOutletIds: [],

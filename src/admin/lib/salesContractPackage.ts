@@ -19,6 +19,7 @@ export type SalesContractPending = {
   modules: Record<string, boolean>;
   hr_seat_count: number;
   omnichannel_paid_seat_count: number;
+  ai_employee_seat_count: number;
   keep_employee_ids: string[];
   outlet_quota: number | null;
   keep_outlet_ids: string[];
@@ -38,6 +39,7 @@ export type SalesContractFormSnapshot = {
   modules: Record<SalesModuleKey, boolean>;
   hrSeats: number;
   omniSeats: number;
+  aiEmployeeSeats: number;
   keepEmployeeIds: string[];
   outletQuota: number;
   keepOutletIds: string[];
@@ -56,6 +58,7 @@ export type SalesContractBaseline = {
   modules: Record<string, boolean>;
   hrSeats: number;
   omniSeats: number;
+  aiEmployeeSeats?: number;
   outletQuota: number | null;
   monthlyPriceIdr?: number | null;
 };
@@ -153,6 +156,7 @@ export function salesContractFormMatchesPending(
   if (!sameUtcMinute(form.subscriptionEndUtc, pending.subscription_end_date)) return false;
   if (form.hrSeats !== pending.hr_seat_count) return false;
   if (form.omniSeats !== pending.omnichannel_paid_seat_count) return false;
+  if (form.aiEmployeeSeats !== pending.ai_employee_seat_count) return false;
   if (!sameIds(form.keepEmployeeIds, pending.keep_employee_ids)) return false;
   if (form.outletQuota !== (pending.outlet_quota ?? 0)) return false;
   if (!sameIds(form.keepOutletIds, pending.keep_outlet_ids)) return false;
@@ -193,6 +197,7 @@ export function agreedContractRows(input: {
   modules: Record<string, boolean>;
   hrSeats: number;
   omniSeats: number;
+  aiEmployeeSeats?: number;
   outletQuota?: number | null;
   keptOutletNames?: string[];
 }): SalesContractRow[] {
@@ -216,6 +221,10 @@ export function agreedContractRows(input: {
 
   if (enabled("humanResources")) {
     rows.push({ label: "Kuota seat HR", value: String(input.hrSeats) });
+  }
+
+  if (enabled("aiEmployee")) {
+    rows.push({ label: "Kuota karyawan AI", value: String(input.aiEmployeeSeats ?? 0) });
   }
 
   if (enabled("pos") && input.outletQuota != null && input.outletQuota > 0) {
@@ -246,7 +255,7 @@ export function contractAnnexRows(input: {
   current: SalesContractBaseline;
   pending: Pick<
     SalesContractPending,
-    "modules" | "hr_seat_count" | "omnichannel_paid_seat_count" | "outlet_quota"
+    "modules" | "hr_seat_count" | "omnichannel_paid_seat_count" | "ai_employee_seat_count" | "outlet_quota"
   >;
   outlets?: ContractAnnexOutlet[];
   keptOutletNames?: string[];
@@ -283,6 +292,12 @@ export function contractAnnexRows(input: {
     const current = currentOn("humanResources") ? String(input.current.hrSeats) : "Tidak berlaku";
     const next = nextOn("humanResources") ? String(input.pending.hr_seat_count) : "Tidak berlaku";
     rows.push({ item: "Kuota seat HR", current, agreement: annexAgreement(current, next) });
+  }
+
+  if (currentOn("aiEmployee") || nextOn("aiEmployee")) {
+    const current = currentOn("aiEmployee") ? String(input.current.aiEmployeeSeats ?? 0) : "Tidak berlaku";
+    const next = nextOn("aiEmployee") ? String(input.pending.ai_employee_seat_count ?? 0) : "Tidak berlaku";
+    rows.push({ item: "Kuota karyawan AI", current, agreement: annexAgreement(current, next) });
   }
 
   if (currentOn("pos") || nextOn("pos")) {
@@ -366,6 +381,7 @@ export function parseSalesContractPending(data: unknown): SalesContractPending |
     modules,
     hr_seat_count: Number(row.hr_seat_count ?? 0),
     omnichannel_paid_seat_count: Number(row.omnichannel_paid_seat_count ?? 0),
+    ai_employee_seat_count: Number(row.ai_employee_seat_count ?? 0),
     keep_employee_ids: keep,
     outlet_quota:
       typeof row.outlet_quota === "number" && Number.isFinite(row.outlet_quota)
@@ -405,6 +421,12 @@ export function salesContractErrorMessage(error: unknown, fallback: string): str
   if (message.includes("contract file already used")) return "PDF ini sudah dipakai.";
   if (message.includes("contract file is too large")) return "Kontrak PDF paling besar 10 MB.";
   if (message.includes("contract must be a pdf")) return "Kontrak harus berupa PDF.";
+  if (message.includes("kuota karyawan AI minimal")) {
+    const count = message.match(/(\d+)/)?.[1];
+    return count
+      ? `Kuota karyawan AI tidak boleh kurang dari ${count} karyawan AI yang masih aktif.`
+      : "Kuota karyawan AI tidak boleh kurang dari karyawan AI yang masih aktif.";
+  }
   if (message.includes("not allowed")) return "Akses ditolak.";
   if (message.includes("end date cannot exceed 366 days")) {
     return "Tanggal tidak boleh lebih dari 1 tahun dari hari ini.";

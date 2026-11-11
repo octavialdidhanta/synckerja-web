@@ -138,6 +138,7 @@ export default function EditSubscriptionSheet({
   );
   const [modulesReason, setModulesReason] = useState("");
   const [hrSeatInput, setHrSeatInput] = useState("0");
+  const [aiSeatInput, setAiSeatInput] = useState("0");
   const [seatQuotaInput, setSeatQuotaInput] = useState("0");
   const [keptEmployeeIds, setKeptEmployeeIds] = useState<string[]>([]);
   const [outletQuotaInput, setOutletQuotaInput] = useState("1");
@@ -210,6 +211,7 @@ export default function EditSubscriptionSheet({
     if (!salesModules?.is_sales_tenant) {
       setModuleAccess(createDefaultSalesModulesRecord());
       setHrSeatInput("0");
+      setAiSeatInput("0");
       setSeatQuotaInput("0");
       setKeptEmployeeIds([]);
       setOutletQuotaInput("1");
@@ -226,6 +228,7 @@ export default function EditSubscriptionSheet({
       for (const key of SALES_MODULE_KEYS) next[key] = Boolean(pending.modules[key]);
       setModuleAccess(coerceSalesModuleDependencies(next));
       setHrSeatInput(String(pending.hr_seat_count));
+      setAiSeatInput(String(pending.ai_employee_seat_count));
       setSeatQuotaInput(String(pending.omnichannel_paid_seat_count));
       setKeptEmployeeIds(pending.keep_employee_ids);
       setOutletQuotaInput(
@@ -239,6 +242,7 @@ export default function EditSubscriptionSheet({
     const activeOutletIds = outlets.filter((outlet) => outlet.is_active).map((outlet) => outlet.id);
     setModuleAccess(salesModules.modules);
     setHrSeatInput(String(salesModules.hr_seat_count));
+    setAiSeatInput(String(salesModules.ai_employee_seat_count));
     setSeatQuotaInput(String(salesModules.omnichannel_paid_seat_count));
     setKeptEmployeeIds([]);
     setOutletQuotaInput(
@@ -334,8 +338,10 @@ export default function EditSubscriptionSheet({
 
   const savedHrSeatCount = salesModules?.hr_seat_count ?? 0;
   const activeEmployeeCount = salesModules?.active_employee_count ?? 0;
+  const activeAiEmployeeCount = salesModules?.active_ai_employee_count ?? 0;
   const eligibleEmployeeCount = salesModules?.roster_eligible_employee_count ?? 0;
   const parsedHrSeat = parseSeatQuota(hrSeatInput);
+  const parsedAiSeat = parseSeatQuota(aiSeatInput);
   const parsedSeatQuota = parseSeatQuota(seatQuotaInput);
   const rosterMembers = salesModules?.omnichannel_roster ?? [];
   const hrForQuotaMax = parsedHrSeat ?? savedHrSeatCount;
@@ -354,6 +360,20 @@ export default function EditSubscriptionSheet({
     }
     return null;
   }, [activeEmployeeCount, parsedHrSeat, salesModules?.is_sales_tenant]);
+  const aiSeatError = useMemo(() => {
+    if (!salesModules?.is_sales_tenant) return null;
+    if (moduleAccess.aiEmployee) {
+      if (parsedAiSeat === null) return "Isi angka bulat 0 atau lebih.";
+      if (parsedAiSeat < activeAiEmployeeCount) {
+        return `Kuota karyawan AI tidak boleh kurang dari ${activeAiEmployeeCount} karyawan AI yang masih aktif.`;
+      }
+      return null;
+    }
+    if (activeAiEmployeeCount > 0) {
+      return `Modul Karyawan AI tidak bisa dimatikan selama masih ada ${activeAiEmployeeCount} karyawan AI aktif.`;
+    }
+    return null;
+  }, [activeAiEmployeeCount, moduleAccess.aiEmployee, parsedAiSeat, salesModules?.is_sales_tenant]);
   const removedRosterPreview = rosterOverCap
     ? rosterMembers.filter(
         (member) => nextRosterCap === 0 || !keptEmployeeIds.includes(member.employee_id),
@@ -433,7 +453,7 @@ export default function EditSubscriptionSheet({
   const salesPackageError =
     !salesSubscriptionClock || salesModulesLoading || !salesModules?.is_sales_tenant
       ? null
-      : hrSeatError || seatQuotaError || outletQuotaError || priceError;
+      : hrSeatError || aiSeatError || seatQuotaError || outletQuotaError || priceError;
 
   const salesContractSnapshot: SalesContractFormSnapshot | null =
     salesSubscriptionClock &&
@@ -443,6 +463,7 @@ export default function EditSubscriptionSheet({
     parsedOutletQuota !== null &&
     !dateFieldError &&
     !hrSeatError &&
+    !aiSeatError &&
     !seatQuotaError &&
     !outletQuotaError &&
     !priceError
@@ -453,6 +474,7 @@ export default function EditSubscriptionSheet({
           modules: coerceSalesModuleDependencies(moduleAccess),
           hrSeats: parsedHrSeat,
           omniSeats: parsedSeatQuota,
+          aiEmployeeSeats: moduleAccess.aiEmployee ? (parsedAiSeat ?? 0) : 0,
           keepEmployeeIds:
             rosterOverCap && nextRosterCap !== null && nextRosterCap > 0 ? keptEmployeeIds : [],
           outletQuota: parsedOutletQuota,
@@ -497,6 +519,7 @@ export default function EditSubscriptionSheet({
       modules: salesContractSnapshot.modules,
       hr_seat_count: salesContractSnapshot.hrSeats,
       omnichannel_paid_seat_count: salesContractSnapshot.omniSeats,
+      ai_employee_seat_count: salesContractSnapshot.aiEmployeeSeats,
       keep_employee_ids: salesContractSnapshot.keepEmployeeIds,
       outlet_quota: salesContractSnapshot.outletQuota,
       keep_outlet_ids: salesContractSnapshot.keepOutletIds,
@@ -727,6 +750,7 @@ export default function EditSubscriptionSheet({
                           modules: salesModules.modules,
                           hrSeats: salesModules.hr_seat_count,
                           omniSeats: salesModules.omnichannel_paid_seat_count,
+                          aiEmployeeSeats: salesModules.ai_employee_seat_count,
                           outletQuota: salesModules.sales_outlet_quota,
                           monthlyPriceIdr: salesModules.sales_monthly_price_idr,
                         }
@@ -877,6 +901,33 @@ export default function EditSubscriptionSheet({
                               </p>
                             ) : null}
                           </>
+                        ),
+                        aiEmployee: (
+                          <div>
+                            <div className="grid grid-cols-2 items-end gap-x-3 gap-y-2">
+                              <Label htmlFor="ai-employee-seat-quota">Kuota karyawan AI</Label>
+                              <p className="text-sm font-medium leading-none">Karyawan AI aktif</p>
+                              <Input
+                                id="ai-employee-seat-quota"
+                                type="number"
+                                min={0}
+                                step={1}
+                                inputMode="numeric"
+                                disabled={!moduleAccess.aiEmployee}
+                                value={aiSeatInput}
+                                onChange={(event) => setAiSeatInput(event.target.value)}
+                              />
+                              <p className="flex h-10 items-center text-sm font-medium tabular-nums">
+                                {activeAiEmployeeCount}
+                              </p>
+                            </div>
+                            <p className="mt-1.5 text-xs text-muted-foreground">
+                              Satu kursi untuk satu karyawan AI yang masih aktif.
+                            </p>
+                            {aiSeatError ? (
+                              <p className="mt-1 text-xs text-destructive">{aiSeatError}</p>
+                            ) : null}
+                          </div>
                         ),
                         pos: moduleAccess.pos ? (
                           <div>
